@@ -1,0 +1,5 @@
+C:\Development\me\vindinium-starter-csharp\vindinium\bin\Debug\client.exe.config
+C:\Development\me\vindinium-starter-csharp\vindinium\bin\Debug\client.exe
+C:\Development\me\vindinium-starter-csharp\vindinium\bin\Debug\client.pdb
+C:\Development\me\vindinium-starter-csharp\vindinium\obj\Debug\client.exe
+C:\Development\me\vindinium-starter-csharp\vindinium\obj\Debug\client.pdb
