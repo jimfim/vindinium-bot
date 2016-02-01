@@ -2,6 +2,6 @@
 {
 	internal interface IMovement
 	{
-		string ToClosestChest();
+	//	string ToClosestChest();
 	}
 }

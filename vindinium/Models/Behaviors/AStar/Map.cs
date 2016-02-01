@@ -27,14 +27,16 @@ namespace vindinium.Models.Behaviors.AStar
 			//var width = board.GetLength(0);
 			//var length = board.GetLength(1);
 			Node[,] nodemap = new Node[board.GetLength(0),board.GetLength(1)];
-
+		    int count = 0;
 			for (int xIndex = 0; xIndex < board.GetLength(0); xIndex++)
 			{
 				for (int yIndex = 0; yIndex < board.GetLength(1); yIndex++)
 				{
 					nodemap[xIndex,yIndex] = new Node(board[xIndex,yIndex], xIndex, yIndex);
-					if (board[xIndex, yIndex] == Tile.FREE)
-					{
+				    nodemap[xIndex, yIndex].Id = count;
+				    count++;
+                    if (board[xIndex, yIndex] == Tile.FREE || board[xIndex, yIndex] == Tile.GOLD_MINE_2 || board[xIndex, yIndex] == Tile.GOLD_MINE_3 || board[xIndex, yIndex] == Tile.GOLD_MINE_4 || board[xIndex, yIndex] == Tile.GOLD_MINE_NEUTRAL)
+                    {
 						nodemap[xIndex, yIndex].Passable = true;
 					}
 				}
@@ -55,25 +57,25 @@ namespace vindinium.Models.Behaviors.AStar
 			}
 		}
 
-		public void CalculateGForStart(int x, int y)
-		{
-			var node = this.NodeMap[x,y];
-			node.CalculateG();
-		}
+		//public void CalculateGForStart(int x, int y)
+		//{
+		//	var node = this.NodeMap[x,y];
+		//	node.CalculateG();
+		//}
 
-		public void CalculateMovementCostFor(int x, int y)
+		public void CalculateMovementCostFor(CoOrdinates coOrdinates)
 		{
 			for (int i = 0; i < this.X; i++)
 			{
 				for (int j = 0; j < this.Y; j++)
 				{
 					var node = this.NodeMap[i,j];
-					node.H = node.CalculateH(x, y);
+					node.H = node.CalculateH(coOrdinates.X, coOrdinates.Y);
 				}
 			}
 
-			this.NodeMap[x,y].Parents = null;
-			this.NodeMap[x,y].H = 0;
+			this.NodeMap[coOrdinates.X, coOrdinates.Y].Parents = null;
+			this.NodeMap[coOrdinates.X, coOrdinates.Y].H = 0;
 		}
 
 		private List<Node> GetParents(int x, int y)

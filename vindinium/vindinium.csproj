@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\Behaviors\AStar\CoOrdinates.cs" />
     <Compile Include="Models\Behaviors\DefaultMovement.cs" />
     <Compile Include="Models\Behaviors\AStar\Node.cs" />
     <Compile Include="Models\Behaviors\IMovement.cs" />

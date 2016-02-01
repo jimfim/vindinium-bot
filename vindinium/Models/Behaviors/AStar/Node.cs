@@ -41,7 +41,7 @@ namespace vindinium.Models.Behaviors.AStar
 			{
 				node.G = node.H + 10;
 			}
-			return H + 1;
+			return H;
 		}
 
 		public Node(Tile type, int x, int y)
@@ -50,29 +50,5 @@ namespace vindinium.Models.Behaviors.AStar
 			Passable = false;
 			location = new CoOrdinates(x, y);
 		}
-
-		
-
-		public Node Move()
-		{
-			var routes = this.Parents.OrderBy(p => p.H);
-			var result = routes.First();
-			return result;
-		}
-
-	}
-
-
-	public class CoOrdinates
-	{
-		public CoOrdinates(int x, int y)
-		{
-			this.X = x;
-			this.Y = y;
-		}
-
-		public int X { get; set; }
-
-		public int Y { get; set; }
 	}
 }

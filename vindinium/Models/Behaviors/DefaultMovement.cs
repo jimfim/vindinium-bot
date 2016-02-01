@@ -12,59 +12,48 @@ namespace vindinium.Models.Behaviors
 {
 	public class DefaultMovement : IMovement
 	{
-		private readonly Tile[,] gameBoard;
 		public Map Map;
-		//public Node[,] NodeMap;
+        public static Node blacklist;
 
-		public DefaultMovement(Tile[,] board)
-		{
-			this.gameBoard = board;
-			this.Map = new Map(board);
-			this.Map.CalculateParents();
-			
-		}
+        public DefaultMovement(Map board)
+        {
+            this.Map = board;
+            this.Map.CalculateParents();
+            
+        }
 
+	    public CoOrdinates HeroLocation()
+	    {
+            CoOrdinates currentLocation = null;
+            for (int i = 0; i < this.Map.NodeMap.GetLength(0); i++)
+            {
+                for (int j = 0; j < this.Map.NodeMap.GetLength(1); j++)
+                {
+                    if (this.Map.NodeMap[i, j].Type == Tile.HERO_1)
+                    {
+                        currentLocation = new CoOrdinates(i, j);
+                    }
+                }
+            }
+	        return currentLocation;
+	    }
 		
-
-		public string ToClosestChest()
+		public string MoveToClosestChest(CoOrdinates currentLocation, CoOrdinates moveTo)
 		{
-			CoOrdinates currentLocation = null;
-			for (int i = 0; i < this.Map.NodeMap.GetLength(0); i++)
-			{
-				for (int j = 0; j < this.Map.NodeMap.GetLength(1); j++)
-				{
-					if (this.Map.NodeMap[i, j].Type == Tile.HERO_1)
-					{
-						currentLocation = new CoOrdinates(i, j);
-					}
-				}
-			}
-
-			Node closestChest = this.GetClosestChest(currentLocation);
-			Console.WriteLine("Moving to : {0} {1}", closestChest.location.X, closestChest.location.Y);
-			this.Map.CalculateMovementCostFor(closestChest.location.X, closestChest.location.Y);
-			return MoveToClosestChest(currentLocation);
-		}
-
-		private string MoveToClosestChest(CoOrdinates currentLocation)
-		{
-			var routes = this.Map.NodeMap[currentLocation.X, currentLocation.Y].Parents.Where(route => route.Passable).Reverse();
-			var next = routes.First();
-
-			string direction = "Stay";
-			if (next.location.X > currentLocation.X)
+            string direction = "Stay";
+			if (moveTo.X > currentLocation.X)
 			{
 				direction= "East";
 			}
-			else if (next.location.X < currentLocation.X)
+			else if (moveTo.X < currentLocation.X)
 			{
 				direction= "West";
 			}
-			else if (next.location.Y > currentLocation.Y)
+			else if (moveTo.Y > currentLocation.Y)
 			{
 				direction= "South";
 			}
-			else if (next.location.Y < currentLocation.Y)
+			else if (moveTo.Y < currentLocation.Y)
 			{
 				direction= "North";
 			}
@@ -72,7 +61,7 @@ namespace vindinium.Models.Behaviors
 			return direction;
 		}
 
-		private Node GetClosestChest(CoOrdinates currentPosition)
+		public Node GetClosestChest(CoOrdinates currentPosition)
 		{
 			var viableChests = new List<Node>();
 			for (int i = 0; i < this.Map.NodeMap.GetLength(0); i++)
@@ -93,5 +82,22 @@ namespace vindinium.Models.Behaviors
 			var closest = viableChests.OrderBy(c => c.H).First();
 			return closest;
 		}
+
+	    public List<Node> GetShortestCompleteRouteToLocation(CoOrdinates closestChest)
+	    {
+            List<Node> path = new List<Node>();
+	        var target = Map.NodeMap[closestChest.X, closestChest.Y];
+	        int depth = target.H;
+            Node currentNode = target;
+            path.Add(target);
+	        while (depth != 0)
+	        {
+                var nextStep = currentNode.Parents.Where(node => node.Passable).OrderBy(node => node.H).First();
+	            path.Add(nextStep);
+	            currentNode = nextStep;
+	            depth = currentNode.H;
+	        }
+            return path;
+	    }
 	}
 }
