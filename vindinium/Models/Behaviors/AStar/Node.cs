@@ -19,10 +19,6 @@ namespace vindinium.Models.Behaviors.AStar
 
 		public Tile Type { get; set; }
 
-		public bool Start { get; set; }
-
-		public bool End { get; set; }
-
 		public bool Passable { get; set; }
 
 		public List<Node> Parents { get; set; }

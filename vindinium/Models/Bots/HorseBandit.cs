@@ -27,16 +27,23 @@ namespace vindinium.Models.Bots
 		//starts everything
 		public void Run()
 		{
-            Console.Out.WriteLine("random bot running");
             while (this.serverStuff.Finished == false && this.serverStuff.Errored == false)
             {
                 Map board = new Map(this.serverStuff.Board);
-                var moveBehavior = new DefaultMovement(board);
+                var movement = new DefaultMovement(board);
+                var herolocation = movement.HeroLocation();
+                board.CalculateMovementCostFor(herolocation);
+                var closestChest = movement.GetClosestChest(herolocation);
+
+                Console.Out.WriteLine("Hero at : {0} {1} ", herolocation.X, herolocation.Y);
+                Console.Out.WriteLine("chest at : {0} {1} ", closestChest.location.X, closestChest.location.Y);
                 
-                var closestChest = moveBehavior.GetClosestChest(moveBehavior.HeroLocation());
-                board.CalculateMovementCostFor(closestChest.location);
-                var route = moveBehavior.GetShortestCompleteRouteToLocation(closestChest.location);
-                this.serverStuff.MoveHero(moveBehavior.MoveToClosestChest(moveBehavior.HeroLocation(), route.First().location));
+
+                var route = movement.GetShortestCompleteRouteToLocation(closestChest.location);
+                Console.Out.WriteLine("move to : {0} {1} ", route.First().location.X, route.First().location.Y);
+                // var route = moveBehavior.GetShortestCompleteRouteToLocation(closestChest.location);
+
+                this.serverStuff.MoveHero(movement.MoveToClosestChest(herolocation, route.First().location));
                 Console.Out.WriteLine("completed turn " + this.serverStuff.CurrentTurn);
             }
 

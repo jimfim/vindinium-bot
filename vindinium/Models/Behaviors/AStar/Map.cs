@@ -32,10 +32,10 @@ namespace vindinium.Models.Behaviors.AStar
 			{
 				for (int yIndex = 0; yIndex < board.GetLength(1); yIndex++)
 				{
-					nodemap[xIndex,yIndex] = new Node(board[xIndex,yIndex], xIndex, yIndex);
-				    nodemap[xIndex, yIndex].Id = count;
+				    nodemap[xIndex, yIndex] = new Node(board[xIndex, yIndex], xIndex, yIndex) { Id = count };
 				    count++;
-                    if (board[xIndex, yIndex] == Tile.FREE || board[xIndex, yIndex] == Tile.GOLD_MINE_2 || board[xIndex, yIndex] == Tile.GOLD_MINE_3 || board[xIndex, yIndex] == Tile.GOLD_MINE_4 || board[xIndex, yIndex] == Tile.GOLD_MINE_NEUTRAL)
+                    if (board[xIndex, yIndex] == Tile.FREE || 
+                        board[xIndex, yIndex] == Tile.HERO_1)
                     {
 						nodemap[xIndex, yIndex].Passable = true;
 					}
@@ -56,12 +56,6 @@ namespace vindinium.Models.Behaviors.AStar
 				}
 			}
 		}
-
-		//public void CalculateGForStart(int x, int y)
-		//{
-		//	var node = this.NodeMap[x,y];
-		//	node.CalculateG();
-		//}
 
 		public void CalculateMovementCostFor(CoOrdinates coOrdinates)
 		{

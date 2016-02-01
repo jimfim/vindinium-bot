@@ -19,7 +19,7 @@ namespace vindinium.Models.Behaviors
         {
             this.Map = board;
             this.Map.CalculateParents();
-            
+
         }
 
 	    public CoOrdinates HeroLocation()
@@ -92,7 +92,7 @@ namespace vindinium.Models.Behaviors
             path.Add(target);
 	        while (depth != 0)
 	        {
-                var nextStep = currentNode.Parents.Where(node => node.Passable).OrderBy(node => node.H).First();
+                var nextStep = currentNode.Parents.Where(tile => tile.Type == Tile.FREE || tile.Type == Tile.HERO_1).OrderBy(node => node.H).First();
 	            path.Add(nextStep);
 	            currentNode = nextStep;
 	            depth = currentNode.H;
