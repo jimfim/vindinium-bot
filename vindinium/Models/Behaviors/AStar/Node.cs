@@ -13,9 +13,7 @@ namespace vindinium.Models.Behaviors.AStar
 	{
 		public int Id { get; set; }
 		// Movement Cost
-		public int H { get; set; }
-
-		public int G { get; set; }
+		public int MovementCost { get; set; }
 
 		public Tile Type { get; set; }
 
@@ -25,19 +23,10 @@ namespace vindinium.Models.Behaviors.AStar
 
 		public CoOrdinates location { get; set; }
 
-		public int CalculateH(int x, int y)
+	    public int CalculateMovementCost(int x, int y)
 		{
-			H = (Math.Abs(this.location.X - x) + Math.Abs(this.location.Y - y));
-			return this.H;
-		}
-
-		public int CalculateG()
-		{
-			foreach (var node in Parents)
-			{
-				node.G = node.H + 10;
-			}
-			return H;
+			MovementCost = (Math.Abs(this.location.X - x) + Math.Abs(this.location.Y - y));
+			return this.MovementCost;
 		}
 
 		public Node(Tile type, int x, int y)
@@ -45,6 +34,8 @@ namespace vindinium.Models.Behaviors.AStar
 			Type = type;
 			Passable = false;
 			location = new CoOrdinates(x, y);
-		}
+            MovementCost = Int32.MaxValue;
+
+        }
 	}
 }

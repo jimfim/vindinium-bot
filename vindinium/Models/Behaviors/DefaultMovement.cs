@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -13,16 +14,14 @@ namespace vindinium.Models.Behaviors
 	public class DefaultMovement : IMovement
 	{
 		public Map Map;
-        public static Node blacklist;
-
         public DefaultMovement(Map board)
         {
             this.Map = board;
-            this.Map.CalculateParents();
-
+            this.Map.PopulateNodeParents();
+            PopulateMovementCost();
         }
 
-	    public CoOrdinates HeroLocation()
+	    public CoOrdinates GetHeroLocation()
 	    {
             CoOrdinates currentLocation = null;
             for (int i = 0; i < this.Map.NodeMap.GetLength(0); i++)
@@ -38,30 +37,7 @@ namespace vindinium.Models.Behaviors
 	        return currentLocation;
 	    }
 		
-		public string MoveToClosestChest(CoOrdinates currentLocation, CoOrdinates moveTo)
-		{
-            string direction = "Stay";
-			if (moveTo.X > currentLocation.X)
-			{
-				direction= "East";
-			}
-			else if (moveTo.X < currentLocation.X)
-			{
-				direction= "West";
-			}
-			else if (moveTo.Y > currentLocation.Y)
-			{
-				direction= "South";
-			}
-			else if (moveTo.Y < currentLocation.Y)
-			{
-				direction= "North";
-			}
-			Console.WriteLine(direction);
-			return direction;
-		}
-
-		public Node GetClosestChest(CoOrdinates currentPosition)
+		public Node GetClosestChest()
 		{
 			var viableChests = new List<Node>();
 			for (int i = 0; i < this.Map.NodeMap.GetLength(0); i++)
@@ -74,30 +50,71 @@ namespace vindinium.Models.Behaviors
 					}
 				}
 			}
-
 			foreach (var viableChest in viableChests)
 			{
-				viableChest.CalculateH(currentPosition.X, currentPosition.Y);
+				viableChest.CalculateMovementCost(Map.HeroCurrentLocation.X, Map.HeroCurrentLocation.Y);
 			}
-			var closest = viableChests.OrderBy(c => c.H).First();
+			var closest = viableChests.OrderBy(c => c.MovementCost).First();
 			return closest;
 		}
 
-	    public List<Node> GetShortestCompleteRouteToLocation(CoOrdinates closestChest)
+        public List<Node> GetShortestCompleteRouteToLocation(CoOrdinates closestChest)
+        {
+            var result = new List<Node>();
+            var node = Map.NodeMap[closestChest.X, closestChest.Y];
+            int depth = node.MovementCost;
+            Node target = node;
+            
+            while (depth > 1) // 0 is the hero
+            {
+                result.Add(target);
+    
+                depth = target.MovementCost;
+                target = target.Parents.Where(n => n.Type != Tile.GOLD_MINE_1).OrderBy(n => n.MovementCost).First();
+                if (result.Any(n => n.Id == target.Id))
+                {
+                    break;
+                }
+            }
+            if (!result.Any())
+            {
+                result.Add(target);
+            }
+            result.Reverse();
+            return result;
+        }
+
+
+	    private void PopulateMovementCost()
 	    {
-            List<Node> path = new List<Node>();
-	        var target = Map.NodeMap[closestChest.X, closestChest.Y];
-	        int depth = target.H;
-            Node currentNode = target;
-            path.Add(target);
-	        while (depth != 0)
+	        var hero = Map.NodeMap[GetHeroLocation().X, GetHeroLocation().Y];
+	        int depth = 0;
+	        hero.MovementCost = depth;
+	        depth++;
+
+            foreach (var parent in hero.Parents)
 	        {
-                var nextStep = currentNode.Parents.Where(tile => tile.Type == Tile.FREE || tile.Type == Tile.HERO_1).OrderBy(node => node.H).First();
-	            path.Add(nextStep);
-	            currentNode = nextStep;
-	            depth = currentNode.H;
+	            if (parent.Passable)
+	            {
+	                parent.MovementCost = depth;
+                    FindAllRoutes(depth, parent);
+	            }
 	        }
-            return path;
 	    }
+
+	    private void FindAllRoutes(int depth, Node parentNode)
+	    {
+            depth++;
+            foreach (var node in parentNode.Parents)
+            {
+                if (node.Passable && depth < node.MovementCost)
+                {
+                    node.MovementCost = depth;
+                    FindAllRoutes(depth, node);
+                }                
+            }
+        }
+
+
 	}
 }

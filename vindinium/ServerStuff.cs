@@ -5,7 +5,7 @@ using System.IO;
 using System.Net;
 using System.Runtime.Serialization.Json;
 using System.Text;
-
+using vindinium.Models.Behaviors.AStar;
 using vindinium.Models.DTOs;
 
 #endregion
@@ -26,6 +26,10 @@ namespace vindinium
 
 		private readonly uint turns;
 
+	    public ServerStuff()
+	    {
+	        
+	    }
 		//if training mode is false, turns and Map are ignored8
 		public ServerStuff(string key, bool trainingMode, uint turns, string serverURL, string map)
 		{
@@ -105,7 +109,30 @@ namespace vindinium
 			}
 		}
 
-		public void MoveHero(string direction)
+        public string GetDirection(CoOrdinates currentLocation, CoOrdinates moveTo)
+        {
+            string direction = "Stay";
+            if (moveTo.X > currentLocation.X)
+            {
+                direction = "East";
+            }
+            else if (moveTo.X < currentLocation.X)
+            {
+                direction = "West";
+            }
+            else if (moveTo.Y > currentLocation.Y)
+            {
+                direction = "South";
+            }
+            else if (moveTo.Y < currentLocation.Y)
+            {
+                direction = "North";
+            }
+ 
+            return direction;
+        }
+
+        public void MoveHero(string direction)
 		{
 			var myParameters = "key=" + key + "&dir=" + direction;
 

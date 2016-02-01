@@ -23,7 +23,7 @@ namespace vindinium.tests
 	    [Test]
 	    public void ParseMap()
 	    {
-		    ServerStuff server = new ServerStuff("s",true,50,"http://vindinium.org/","m2");
+		    ServerStuff server = new ServerStuff("s",true,50,"http://vindinium.org/","m4");
 			server.CreateBoard(size, map);
 			Assert.IsNotNull(server.Board);
 	    }
@@ -31,25 +31,20 @@ namespace vindinium.tests
         [Test]
         public void GetRoutes()
         {
-            ServerStuff server = new ServerStuff("4bxz95pv", true, 50, "http://vindinium.org/", "m2");
+            ServerStuff server = new ServerStuff();
             server.CreateBoard(size, map);
             Map board = new Map(server.Board);
-
-            var heroLocation = new CoOrdinates(6, 3);
-            board.CalculateMovementCostFor(heroLocation);
-
             var movement = new DefaultMovement(board);
-            var closestChest = movement.GetClosestChest(heroLocation);
+            var closestChest = movement.GetClosestChest();
 
             var route = movement.GetShortestCompleteRouteToLocation(closestChest.location);
-            this.VisualizeMap(board);
 
-            Console.WriteLine("move order");
-            foreach (var node in route)
+            foreach (Node node in route)
             {
-                Console.WriteLine("{0}-{1}", node.location.X, node.location.Y);
+                Console.WriteLine("{0}-{1}",node.location.X,node.location.Y);
             }
 
+            this.VisualizeMap(board);
             //Assert.IsNotNull(route);
         }
 
@@ -60,7 +55,7 @@ namespace vindinium.tests
                 for (int j = 0; j < server.NodeMap.GetLength(1); j++)
                 {
 
-                    Console.Write("{0}\t", server.NodeMap[i, j].H, server.NodeMap[i, j].location.X, server.NodeMap[i, j].location.Y);
+                    Console.Write("{0}\t", server.NodeMap[i, j].MovementCost == int.MaxValue ? "#" : server.NodeMap[i, j].MovementCost.ToString());
                 }
                 Console.WriteLine();
             }

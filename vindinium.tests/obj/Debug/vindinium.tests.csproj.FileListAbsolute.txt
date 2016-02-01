@@ -7,3 +7,12 @@ C:\Development\me\vindinium-starter-csharp\vindinium.tests\bin\Debug\nunit.frame
 C:\Development\me\vindinium-starter-csharp\vindinium.tests\obj\Debug\vindinium.tests.csprojResolveAssemblyReference.cache
 C:\Development\me\vindinium-starter-csharp\vindinium.tests\obj\Debug\vindinium.tests.dll
 C:\Development\me\vindinium-starter-csharp\vindinium.tests\obj\Debug\vindinium.tests.pdb
+C:\Development\vindinium-bot\vindinium.tests\obj\Debug\vindinium.tests.csprojResolveAssemblyReference.cache
+C:\Development\vindinium-bot\vindinium.tests\bin\Debug\vindinium.tests.dll
+C:\Development\vindinium-bot\vindinium.tests\bin\Debug\vindinium.tests.pdb
+C:\Development\vindinium-bot\vindinium.tests\bin\Debug\client.exe
+C:\Development\vindinium-bot\vindinium.tests\bin\Debug\nunit.framework.dll
+C:\Development\vindinium-bot\vindinium.tests\bin\Debug\client.pdb
+C:\Development\vindinium-bot\vindinium.tests\bin\Debug\nunit.framework.xml
+C:\Development\vindinium-bot\vindinium.tests\obj\Debug\vindinium.tests.dll
+C:\Development\vindinium-bot\vindinium.tests\obj\Debug\vindinium.tests.pdb

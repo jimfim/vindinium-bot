@@ -1,58 +1,65 @@
 ﻿using System;
 using System.Linq;
-
 using vindinium.Models.Behaviors;
 using vindinium.Models.Behaviors.AStar;
-using vindinium.Models.DTOs;
 
 namespace vindinium.Models.Bots
 {
-	public class HorseBandit : IBot
-	{
-		public string BotName {
-			get
-			{
-				return "HorseBandit";
-			}
-		}
+    public class HorseBandit : IBot
+    {
+        private readonly ServerStuff serverStuff;
 
+        public HorseBandit(ServerStuff serverStuff)
+        {
+            this.serverStuff = serverStuff;
+        }
 
-		private readonly ServerStuff serverStuff;
+        public string BotName
+        {
+            get { return "HorseBandit"; }
+        }
 
-		public HorseBandit(ServerStuff serverStuff)
-		{
-			this.serverStuff = serverStuff;
-		}
-
-		//starts everything
-		public void Run()
-		{
-            while (this.serverStuff.Finished == false && this.serverStuff.Errored == false)
+        //starts everything
+        public void Run()
+        {
+            while (serverStuff.Finished == false && serverStuff.Errored == false)
             {
-                Map board = new Map(this.serverStuff.Board);
+                var board = new Map(serverStuff.Board);
                 var movement = new DefaultMovement(board);
-                var herolocation = movement.HeroLocation();
-                board.CalculateMovementCostFor(herolocation);
-                var closestChest = movement.GetClosestChest(herolocation);
 
-                Console.Out.WriteLine("Hero at : {0} {1} ", herolocation.X, herolocation.Y);
+                var closestChest = movement.GetClosestChest();
+                Console.Out.WriteLine("Hero at : {0} {1} ", board.HeroCurrentLocation.X, board.HeroCurrentLocation.Y);
                 Console.Out.WriteLine("chest at : {0} {1} ", closestChest.location.X, closestChest.location.Y);
-                
-
+                //Console.Out.WriteLine("move to : {0} {1} ", route.First().location.X, route.First().location.Y);
                 var route = movement.GetShortestCompleteRouteToLocation(closestChest.location);
-                Console.Out.WriteLine("move to : {0} {1} ", route.First().location.X, route.First().location.Y);
-                // var route = moveBehavior.GetShortestCompleteRouteToLocation(closestChest.location);
 
-                this.serverStuff.MoveHero(movement.MoveToClosestChest(herolocation, route.First().location));
-                Console.Out.WriteLine("completed turn " + this.serverStuff.CurrentTurn);
+                var direction  = serverStuff.GetDirection(board.HeroCurrentLocation, route.First().location);
+                serverStuff.MoveHero(direction);
+                Console.Out.WriteLine("completed turn " + serverStuff.CurrentTurn);
+
+                VisualizeMap(movement.Map);
             }
 
-            if (this.serverStuff.Errored)
+            if (serverStuff.Errored)
             {
-                Console.Out.WriteLine("error: " + this.serverStuff.ErrorText);
+                Console.Out.WriteLine("error: " + serverStuff.ErrorText);
             }
 
             Console.Out.WriteLine("random bot Finished");
         }
-	}
+
+
+        private void VisualizeMap(Map server)
+        {
+
+            for (int i = 0; i < server.NodeMap.GetLength(0); i++)
+            {
+                for (int j = 0; j < server.NodeMap.GetLength(1); j++)
+                {
+                    Console.Write("{0}\t", server.NodeMap[i, j].MovementCost == int.MaxValue ? "#" : server.NodeMap[i, j].MovementCost.ToString());
+                }
+                Console.WriteLine();
+            }
+        }
+    }
 }
