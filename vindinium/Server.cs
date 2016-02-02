@@ -31,7 +31,7 @@ namespace vindinium
         {
         }
 
-        //if training mode is false, turns and Map are ignored8
+        //if training mode is false, turns and DefaultMapBuilder are ignored8
         public Server(string key, bool trainingMode, uint turns, string serverURL, string map)
         {
             this.key = key;
@@ -113,6 +113,10 @@ namespace vindinium
         public string GetDirection(CoOrdinates currentLocation, CoOrdinates moveTo)
         {
             var direction = "Stay";
+            if (moveTo == null)
+            {
+                return direction;
+            }
             if (moveTo.X > currentLocation.X)
             {
                 direction = "East";

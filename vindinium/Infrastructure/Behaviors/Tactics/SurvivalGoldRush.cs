@@ -1,27 +1,32 @@
 ﻿using System;
-using System.CodeDom;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using vindinium.Infrastructure.Behaviors.Extensions;
 using vindinium.Infrastructure.Behaviors.Models;
-using vindinium.Infrastructure.DTOs;
 
 namespace vindinium.Infrastructure.Behaviors.Tactics
 {
-    /// <summary>
-    /// Charges for closest un-owned goldmine
-    /// </summary>
-    public class DumbGoldRush : ITactic
+    public class SurvivalGoldRush : ITactic
     {
         private readonly IMapBuilder _game;
 
-        public DumbGoldRush(IMapBuilder game)
+        public SurvivalGoldRush(IMapBuilder game)
         {
             this._game = game;
         }
 
         public Node NextDestination()
         {
+            if (_game.MyHero.life < 30 )
+            {
+                return _game.GetClosestTavern();
+            }
+            if (_game.MyHero.life < 90 && _game.GetClosestTavern().MovementCost < 2)
+            {
+                return _game.GetClosestTavern();
+            }
             return _game.GetClosestChest();
         }
     }

@@ -8,34 +8,21 @@ namespace vindinium.Infrastructure.Behaviors.Movement
 {
 	public class DefaultMovement : IMovement
     {
-		public Map Map;
-        public DefaultMovement(Map board)
+		private readonly IMapBuilder _defaultMapBuilderBuilder;
+
+	    private Node HeroNode => _defaultMapBuilderBuilder.HeroNode;
+
+	    public DefaultMovement(IMapBuilder board)
         {
-            this.Map = board;
-            this.Map.PopulateNodeParents();
-            this.PopulateMovementCost();
+            _defaultMapBuilderBuilder = board;
+            PopulateMovementCost();
         }
 
-	    public CoOrdinates GetHeroLocation()
-	    {
-            CoOrdinates currentLocation = null;
-            for (int i = 0; i < this.Map.NodeMap.GetLength(0); i++)
-            {
-                for (int j = 0; j < this.Map.NodeMap.GetLength(1); j++)
-                {
-                    if (this.Map.NodeMap[i, j].Type == Tile.HERO_1)
-                    {
-                        currentLocation = new CoOrdinates(i, j);
-                    }
-                }
-            }
-	        return currentLocation;
-	    }
 
         public List<Node> GetShortestCompleteRouteToLocation(CoOrdinates closestChest)
         {
             var result = new List<Node>();
-            var node = Map.NodeMap[closestChest.X, closestChest.Y];
+            var node = _defaultMapBuilderBuilder.NodeMap[closestChest.X, closestChest.Y];
             int depth;
             Node target = node;
             do
@@ -43,26 +30,30 @@ namespace vindinium.Infrastructure.Behaviors.Movement
                 result.Add(target);
                 depth = target.MovementCost;
                 target = target.Parents.Where(n => n.Type != Tile.GOLD_MINE_1 && n.MovementCost > 0).OrderBy(n => n.MovementCost).First();
+                // no route to anything protection.. just wait
+                if (result.Count > 100)
+                {
+                    return null;
+                }
             }
             while (depth > 1); // 0 is the hero
             result = result.OrderBy(n => n.MovementCost).ToList();
             return result;
         }
 
-
 	    private void PopulateMovementCost()
 	    {
-	        var hero = this.Map.NodeMap[this.GetHeroLocation().X, this.GetHeroLocation().Y];
+	        
 	        int depth = 0;
-	        hero.MovementCost = depth;
+	        HeroNode.MovementCost = depth;
 	        depth++;
 
-            foreach (var heroNode in hero.Parents)
+            foreach (var heroNode in HeroNode.Parents)
 	        {
                 AssignCost(depth, heroNode);
 	            if (heroNode.Passable)
 	            {
-                    this.FindAllRoutes(depth, heroNode);
+                    FindAllRoutes(depth, heroNode);
                 }
 	        }
 	    }
@@ -75,7 +66,7 @@ namespace vindinium.Infrastructure.Behaviors.Movement
                 AssignCost(depth, node);
                 if (node.Passable)
                 {
-                    this.FindAllRoutes(depth, node);
+                    FindAllRoutes(depth, node);
                 }
             }
         }
@@ -101,7 +92,6 @@ namespace vindinium.Infrastructure.Behaviors.Movement
                 {
                     node.MovementCost = cost;
                     node.Passable = false;
-                    node.Capture = true;
                 }
                 else
                 {
@@ -110,7 +100,5 @@ namespace vindinium.Infrastructure.Behaviors.Movement
                 }
             }
 	    }
-
-
 	}
 }

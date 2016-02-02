@@ -31,7 +31,7 @@ namespace vindinium.tests
         {
             Server server = new Server();
             server.CreateBoard(size, map);
-            Map board = new Map(server.Board);
+            DefaultMapBuilder board = new DefaultMapBuilder(server);
             var movement = new DefaultMovement(board);
             //var closestChest = movement.GetClosestChest();
 
@@ -46,7 +46,7 @@ namespace vindinium.tests
             //Assert.IsNotNull(route);
         }
 
-        private void VisualizeMap(Map server)
+        private void VisualizeMap(DefaultMapBuilder server)
         {
             for (int i = 0; i < server.NodeMap.GetLength(0); i ++)
             {

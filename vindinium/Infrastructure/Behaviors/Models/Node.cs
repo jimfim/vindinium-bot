@@ -16,8 +16,6 @@ namespace vindinium.Infrastructure.Behaviors.Models
 
 		public bool Passable { get; set; }
 
-	    public bool Capture { get; set; }
-
 	    public List<Node> Parents { get; set; }
 
 		public CoOrdinates Location { get; set; }

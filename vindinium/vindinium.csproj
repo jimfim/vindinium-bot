@@ -33,6 +33,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="StructureMap, Version=4.0.1.318, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\structuremap.4.0.1.318\lib\net40\StructureMap.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="StructureMap.Net4, Version=4.0.1.318, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\structuremap.4.0.1.318\lib\net40\StructureMap.Net4.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
@@ -43,13 +51,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Infrastructure\Behaviors\Extensions\MapExtensions.cs" />
     <Compile Include="Infrastructure\Behaviors\Models\CoOrdinates.cs" />
+    <Compile Include="Infrastructure\Behaviors\Models\IMapBuilder.cs" />
     <Compile Include="Infrastructure\Behaviors\Movement\ShortestPath.cs" />
     <Compile Include="Infrastructure\Behaviors\Models\Node.cs" />
     <Compile Include="Infrastructure\Behaviors\Movement\IMovement.cs" />
-    <Compile Include="Infrastructure\Behaviors\Models\Map.cs" />
+    <Compile Include="Infrastructure\Behaviors\Models\DefaultMapBuilder.cs" />
     <Compile Include="Infrastructure\Behaviors\Tactics\DumbGoldRush.cs" />
-    <Compile Include="Infrastructure\Bots\HorseBandit.cs" />
+    <Compile Include="Infrastructure\Behaviors\Tactics\ITactic.cs" />
+    <Compile Include="Infrastructure\Behaviors\Tactics\SurvivalGoldRush.cs" />
+    <Compile Include="Infrastructure\Bots\Robot.cs" />
     <Compile Include="Infrastructure\Bots\IBot.cs" />
     <Compile Include="Infrastructure\DTOs\Board.cs" />
     <Compile Include="Infrastructure\DTOs\Direction.cs" />
@@ -65,6 +77,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
