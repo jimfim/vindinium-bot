@@ -1,6 +1,6 @@
 ﻿using System.Runtime.Serialization;
 
-namespace vindinium.Models.DTOs
+namespace vindinium.Infrastructure.DTOs
 {
   [DataContract]
   public class Hero

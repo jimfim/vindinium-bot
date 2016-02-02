@@ -7,10 +7,8 @@ using System.Threading.Tasks;
 
 using NUnit.Framework;
 
-using vindinium.Models.Behaviors;
-using vindinium.Models.Behaviors.AStar;
-using vindinium.Models.Bots;
-using vindinium.Models.DTOs;
+using vindinium.Infrastructure.Behaviors.Models;
+using vindinium.Infrastructure.Behaviors.Movement;
 
 namespace vindinium.tests
 {
@@ -23,7 +21,7 @@ namespace vindinium.tests
 	    [Test]
 	    public void ParseMap()
 	    {
-		    ServerStuff server = new ServerStuff("s",true,50,"http://vindinium.org/","m4");
+		    Server server = new Server("s",true,50,"http://vindinium.org/","m4");
 			server.CreateBoard(size, map);
 			Assert.IsNotNull(server.Board);
 	    }
@@ -31,18 +29,18 @@ namespace vindinium.tests
         [Test]
         public void GetRoutes()
         {
-            ServerStuff server = new ServerStuff();
+            Server server = new Server();
             server.CreateBoard(size, map);
             Map board = new Map(server.Board);
             var movement = new DefaultMovement(board);
-            var closestChest = movement.GetClosestChest();
+            //var closestChest = movement.GetClosestChest();
 
-            var route = movement.GetShortestCompleteRouteToLocation(closestChest.location);
+            //var route = movement.GetShortestCompleteRouteToLocation(closestChest.Location);
 
-            foreach (Node node in route)
-            {
-                Console.WriteLine("{0}-{1}",node.location.X,node.location.Y);
-            }
+            //foreach (Node node in route)
+            //{
+            //    Console.WriteLine("{0}-{1}",node.Location.X,node.Location.Y);
+            //}
 
             this.VisualizeMap(board);
             //Assert.IsNotNull(route);

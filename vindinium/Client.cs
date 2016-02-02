@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-using vindinium.Models.Bots;
+using vindinium.Infrastructure.Bots;
 
 namespace vindinium
 {
@@ -24,25 +24,25 @@ namespace vindinium
 
             //create the server stuff, when not in training mode, it doesnt matter
             //what you use as the number of turns
-			ServerStuff serverStuff = new ServerStuff(args[0], args[1] != "arena", uint.Parse(args[2]), serverUrl, args[4]);
+			Server server = new Server(args[0], args[1] != "arena", uint.Parse(args[2]), serverUrl, args[4]);
 
             //create the random bot, replace this with your own bot
-			//var bot = new RandomBot(serverStuff);
-			serverStuff.CreateGame();
+			//var bot = new RandomBot(Server);
+			server.CreateGame();
 
 
-			if (serverStuff.Errored == false)
+			if (server.Errored == false)
 			{
 				//opens up a webpage so you can view the game, doing it async so we dont time out
 				new Thread(delegate()
 				{
-					System.Diagnostics.Process.Start(serverStuff.ViewUrl);
+					System.Diagnostics.Process.Start(server.ViewUrl);
 				}).Start();
 			}
 
 
-			//var bot = new RandomBot(serverStuff);
-			var bot = new HorseBandit(serverStuff);
+			//var bot = new RandomBot(Server);
+			var bot = new HorseBandit(server);
 
             //now kick it all off by running the bot.
             bot.Run();

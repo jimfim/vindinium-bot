@@ -1,4 +1,4 @@
-﻿namespace vindinium.Models.Behaviors.AStar
+﻿namespace vindinium.Infrastructure.Behaviors.Models
 {
     public class CoOrdinates
     {

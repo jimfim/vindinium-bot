@@ -1,4 +1,4 @@
-﻿namespace vindinium.Models.DTOs
+﻿namespace vindinium.Infrastructure.DTOs
 {
     public enum Tile
     {
