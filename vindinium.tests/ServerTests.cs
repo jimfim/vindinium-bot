@@ -21,7 +21,7 @@ namespace vindinium.tests
 	    [Test]
 	    public void ParseMap()
 	    {
-		    Server server = new Server("s",true,50,"http://vindinium.org/","m4");
+		    Server server = new Server("",true,50,"http://vindinium.org/","m4");
 			server.CreateBoard(size, map);
 			Assert.IsNotNull(server.Board);
 	    }

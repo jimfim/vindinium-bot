@@ -57,12 +57,12 @@ namespace vindinium.Infrastructure.Behaviors.Movement
 	        hero.MovementCost = depth;
 	        depth++;
 
-            foreach (var parent in hero.Parents)
+            foreach (var heroNode in hero.Parents)
 	        {
-                AssignCost(depth, parent);
-	            if (parent.Passable)
+                AssignCost(depth, heroNode);
+	            if (heroNode.Passable)
 	            {
-                    this.FindAllRoutes(depth, parent);
+                    this.FindAllRoutes(depth, heroNode);
                 }
 	        }
 	    }
@@ -70,10 +70,13 @@ namespace vindinium.Infrastructure.Behaviors.Movement
 	    private void FindAllRoutes(int depth, Node parentNode)
 	    {
             depth++;
-            foreach (var node in parentNode.Parents)
+            foreach (var node in parentNode.Parents.Where(n => n.MovementCost > depth))
             {
                 AssignCost(depth, node);
-                this.FindAllRoutes(depth, node);
+                if (node.Passable)
+                {
+                    this.FindAllRoutes(depth, node);
+                }
             }
         }
 
@@ -81,23 +84,24 @@ namespace vindinium.Infrastructure.Behaviors.Movement
 	    {
             if (cost < node.MovementCost)
             {
-                if (node.Type == Tile.IMPASSABLE_WOOD)
+                if (node.Type == Tile.IMPASSABLE_WOOD || node.Type == Tile.GOLD_MINE_1)
                 {
                     node.Passable = false;
                     node.MovementCost = -1;
                 }
-                else if (node.Type == Tile.GOLD_MINE_1 || 
-                    node.Type == Tile.GOLD_MINE_2 || 
+                else if (node.Type == Tile.GOLD_MINE_2 || 
                     node.Type == Tile.GOLD_MINE_3 || 
                     node.Type == Tile.GOLD_MINE_4 || 
                     node.Type == Tile.GOLD_MINE_NEUTRAL ||
                     node.Type == Tile.TAVERN ||
+                    node.Type == Tile.HERO_1 ||
                     node.Type == Tile.HERO_2 ||
                     node.Type == Tile.HERO_3 ||
                     node.Type == Tile.HERO_4)
                 {
                     node.MovementCost = cost;
                     node.Passable = false;
+                    node.Capture = true;
                 }
                 else
                 {
