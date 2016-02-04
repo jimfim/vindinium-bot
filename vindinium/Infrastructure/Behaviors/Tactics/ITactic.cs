@@ -1,9 +1,10 @@
-﻿using vindinium.Infrastructure.Behaviors.Models;
+﻿using vindinium.Infrastructure.Behaviors.Map;
+using vindinium.Infrastructure.Behaviors.Models;
 
 namespace vindinium.Infrastructure.Behaviors.Tactics
 {
     public interface ITactic
     {
-        Node NextDestination();
+        IMapNode NextDestination();
     }
 }

@@ -4,30 +4,32 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using vindinium.Infrastructure.Behaviors.Extensions;
+using vindinium.Infrastructure.Behaviors.Map;
 using vindinium.Infrastructure.Behaviors.Models;
 
 namespace vindinium.Infrastructure.Behaviors.Tactics
 {
     public class SurvivalGoldRush : ITactic
     {
-        private readonly IMapBuilder _game;
+        private readonly IMapBuilder game;
 
         public SurvivalGoldRush(IMapBuilder game)
         {
-            this._game = game;
+            this.game = game;
         }
 
-        public Node NextDestination()
+        public IMapNode NextDestination()
         {
-            if (_game.MyHero.life < 30 )
+            var hero = game.MyHero as HeroNode;
+            if (hero != null && hero.Life < 30 )
             {
-                return _game.GetClosestTavern();
+                return game.GetClosestTavern();
             }
-            if (_game.MyHero.life < 90 && _game.GetClosestTavern().MovementCost < 2)
+            if (hero != null && (hero.Life < 90 && this.game.GetClosestTavern().MovementCost < 2))
             {
-                return _game.GetClosestTavern();
+                return game.GetClosestTavern();
             }
-            return _game.GetClosestChest();
+            return game.GetClosestChest();
         }
     }
 }

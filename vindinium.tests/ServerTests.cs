@@ -37,9 +37,9 @@ namespace vindinium.tests
 
             //var route = movement.GetShortestCompleteRouteToLocation(closestChest.Location);
 
-            //foreach (Node node in route)
+            //foreach (MapNode MapNode in route)
             //{
-            //    Console.WriteLine("{0}-{1}",node.Location.X,node.Location.Y);
+            //    Console.WriteLine("{0}-{1}",MapNode.Location.X,MapNode.Location.Y);
             //}
 
             this.VisualizeMap(board);
@@ -48,15 +48,23 @@ namespace vindinium.tests
 
         private void VisualizeMap(DefaultMapBuilder server)
         {
-            for (int i = 0; i < server.NodeMap.GetLength(0); i ++)
+            for (int i = 0; i < server.MapNodeMap.GetLength(0); i ++)
             {
-                for (int j = 0; j < server.NodeMap.GetLength(1); j++)
+                for (int j = 0; j < server.MapNodeMap.GetLength(1); j++)
                 {
 
-                    Console.Write("{0}\t", server.NodeMap[i, j].MovementCost == int.MaxValue ? "#" : server.NodeMap[i, j].MovementCost.ToString());
+                    Console.Write("{0}\t", server.MapNodeMap[i, j].MovementCost == int.MaxValue ? "#" : server.MapNodeMap[i, j].MovementCost.ToString());
                 }
                 Console.WriteLine();
             }
+        }
+
+
+	    private void HeroMappingtest()
+	    {
+            Server server = new Server();
+            server.CreateBoard(size, map);
+
         }
 	}
 }

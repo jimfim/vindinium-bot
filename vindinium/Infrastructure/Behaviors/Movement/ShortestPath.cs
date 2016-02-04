@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
+using vindinium.Infrastructure.Behaviors.Map;
 using vindinium.Infrastructure.Behaviors.Models;
 using vindinium.Infrastructure.DTOs;
 
@@ -8,23 +9,23 @@ namespace vindinium.Infrastructure.Behaviors.Movement
 {
 	public class DefaultMovement : IMovement
     {
-		private readonly IMapBuilder _defaultMapBuilderBuilder;
+		private readonly IMapBuilder defaultMapBuilderBuilder;
 
-	    private Node HeroNode => _defaultMapBuilderBuilder.HeroNode;
+	    private IMapNode HeroMapNode => this.defaultMapBuilderBuilder.MyHero;       
 
-	    public DefaultMovement(IMapBuilder board)
+        public DefaultMovement(IMapBuilder board)
         {
-            _defaultMapBuilderBuilder = board;
+            this.defaultMapBuilderBuilder = board;
             PopulateMovementCost();
         }
 
 
-        public List<Node> GetShortestCompleteRouteToLocation(CoOrdinates closestChest)
+        public List<IMapNode> GetShortestCompleteRouteToLocation(CoOrdinates closestChest)
         {
-            var result = new List<Node>();
-            var node = _defaultMapBuilderBuilder.NodeMap[closestChest.X, closestChest.Y];
+            var result = new List<IMapNode>();
+            var node = this.defaultMapBuilderBuilder.MapNodeMap[closestChest.X, closestChest.Y];
             int depth;
-            Node target = node;
+            IMapNode target = node;
             do
             {
                 result.Add(target);
@@ -43,12 +44,11 @@ namespace vindinium.Infrastructure.Behaviors.Movement
 
 	    private void PopulateMovementCost()
 	    {
-	        
 	        int depth = 0;
-	        HeroNode.MovementCost = depth;
+	        this.HeroMapNode.MovementCost = depth;
 	        depth++;
 
-            foreach (var heroNode in HeroNode.Parents)
+            foreach (var heroNode in this.HeroMapNode.Parents)
 	        {
                 AssignCost(depth, heroNode);
 	            if (heroNode.Passable)
@@ -58,10 +58,10 @@ namespace vindinium.Infrastructure.Behaviors.Movement
 	        }
 	    }
 
-	    private void FindAllRoutes(int depth, Node parentNode)
+	    private void FindAllRoutes(int depth, IMapNode parentMapNode)
 	    {
             depth++;
-            foreach (var node in parentNode.Parents.Where(n => n.MovementCost > depth))
+            foreach (var node in parentMapNode.Parents.Where(n => n.MovementCost > depth))
             {
                 AssignCost(depth, node);
                 if (node.Passable)
@@ -71,32 +71,32 @@ namespace vindinium.Infrastructure.Behaviors.Movement
             }
         }
 
-	    private void AssignCost(int cost, Node node)
+	    private void AssignCost(int cost, IMapNode mapNode)
 	    {
-            if (cost < node.MovementCost)
+            if (cost < mapNode.MovementCost)
             {
-                if (node.Type == Tile.IMPASSABLE_WOOD || node.Type == Tile.GOLD_MINE_1)
+                if (mapNode.Type == Tile.IMPASSABLE_WOOD || mapNode.Type == Tile.GOLD_MINE_1)
                 {
-                    node.Passable = false;
-                    node.MovementCost = -1;
+                    mapNode.Passable = false;
+                    mapNode.MovementCost = -1;
                 }
-                else if (node.Type == Tile.GOLD_MINE_2 || 
-                    node.Type == Tile.GOLD_MINE_3 || 
-                    node.Type == Tile.GOLD_MINE_4 || 
-                    node.Type == Tile.GOLD_MINE_NEUTRAL ||
-                    node.Type == Tile.TAVERN ||
-                    node.Type == Tile.HERO_1 ||
-                    node.Type == Tile.HERO_2 ||
-                    node.Type == Tile.HERO_3 ||
-                    node.Type == Tile.HERO_4)
+                else if (mapNode.Type == Tile.GOLD_MINE_2 || 
+                    mapNode.Type == Tile.GOLD_MINE_3 || 
+                    mapNode.Type == Tile.GOLD_MINE_4 || 
+                    mapNode.Type == Tile.GOLD_MINE_NEUTRAL ||
+                    mapNode.Type == Tile.TAVERN ||
+                    mapNode.Type == Tile.HERO_1 ||
+                    mapNode.Type == Tile.HERO_2 ||
+                    mapNode.Type == Tile.HERO_3 ||
+                    mapNode.Type == Tile.HERO_4)
                 {
-                    node.MovementCost = cost;
-                    node.Passable = false;
+                    mapNode.MovementCost = cost;
+                    mapNode.Passable = false;
                 }
                 else
                 {
-                    node.MovementCost = cost;
-                    node.Passable = true;
+                    mapNode.MovementCost = cost;
+                    mapNode.Passable = true;
                 }
             }
 	    }

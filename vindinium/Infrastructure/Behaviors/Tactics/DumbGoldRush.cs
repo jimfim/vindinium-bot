@@ -3,6 +3,7 @@ using System.CodeDom;
 using System.Collections.Generic;
 using System.Linq;
 using vindinium.Infrastructure.Behaviors.Extensions;
+using vindinium.Infrastructure.Behaviors.Map;
 using vindinium.Infrastructure.Behaviors.Models;
 using vindinium.Infrastructure.DTOs;
 
@@ -13,16 +14,16 @@ namespace vindinium.Infrastructure.Behaviors.Tactics
     /// </summary>
     public class DumbGoldRush : ITactic
     {
-        private readonly IMapBuilder _game;
+        private readonly IMapBuilder game;
 
         public DumbGoldRush(IMapBuilder game)
         {
-            this._game = game;
+            this.game = game;
         }
 
-        public Node NextDestination()
+        public IMapNode NextDestination()
         {
-            return _game.GetClosestChest();
+            return this.game.GetClosestChest();
         }
     }
 }

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
+using vindinium.Infrastructure.Behaviors.Map;
 using vindinium.Infrastructure.Behaviors.Models;
 using vindinium.Infrastructure.DTOs;
 
@@ -15,23 +17,23 @@ namespace vindinium.Infrastructure.Behaviors.Extensions
         /// </summary>
         /// <param name="defaultMapBuilder"></param>
         /// <returns></returns>
-        public static Node GetClosestChest(this IMapBuilder defaultMapBuilder)
+        public static IMapNode GetClosestChest(this IMapBuilder defaultMapBuilder)
         {
-            var viableChests = new List<Node>();
-            for (int i = 0; i < defaultMapBuilder.NodeMap.GetLength(0); i++)
+            var viableChests = new List<IMapNode>();
+            for (int i = 0; i < defaultMapBuilder.MapNodeMap.GetLength(0); i++)
             {
-                for (int j = 0; j < defaultMapBuilder.NodeMap.GetLength(1); j++)
+                for (int j = 0; j < defaultMapBuilder.MapNodeMap.GetLength(1); j++)
                 {
-                    if (defaultMapBuilder.NodeMap[i, j].Type == Tile.GOLD_MINE_NEUTRAL ||
-                        defaultMapBuilder.NodeMap[i, j].Type == Tile.GOLD_MINE_2 ||
-                        defaultMapBuilder.NodeMap[i, j].Type == Tile.GOLD_MINE_3 ||
-                        defaultMapBuilder.NodeMap[i, j].Type == Tile.GOLD_MINE_4)
+                    if (defaultMapBuilder.MapNodeMap[i, j].Type == Tile.GOLD_MINE_NEUTRAL ||
+                        defaultMapBuilder.MapNodeMap[i, j].Type == Tile.GOLD_MINE_2 ||
+                        defaultMapBuilder.MapNodeMap[i, j].Type == Tile.GOLD_MINE_3 ||
+                        defaultMapBuilder.MapNodeMap[i, j].Type == Tile.GOLD_MINE_4)
                     {
-                        viableChests.Add(defaultMapBuilder.NodeMap[i, j]);
+                        viableChests.Add(defaultMapBuilder.MapNodeMap[i, j]);
                     }
                 }
             }
-            Node closest = null;
+            IMapNode closest = null;
             if (viableChests.Any())
             {
                 closest = viableChests.OrderBy(c => c.MovementCost).First();
@@ -44,20 +46,20 @@ namespace vindinium.Infrastructure.Behaviors.Extensions
         /// </summary>
         /// <param name="defaultMapBuilder"></param>
         /// <returns></returns>
-        public static Node GetClosestTavern(this IMapBuilder defaultMapBuilder)
+        public static IMapNode GetClosestTavern(this IMapBuilder defaultMapBuilder)
         {
-            var viableTaverns = new List<Node>();
-            for (int i = 0; i < defaultMapBuilder.NodeMap.GetLength(0); i++)
+            var viableTaverns = new List<IMapNode>();
+            for (int i = 0; i < defaultMapBuilder.MapNodeMap.GetLength(0); i++)
             {
-                for (int j = 0; j < defaultMapBuilder.NodeMap.GetLength(1); j++)
+                for (int j = 0; j < defaultMapBuilder.MapNodeMap.GetLength(1); j++)
                 {
-                    if (defaultMapBuilder.NodeMap[i, j].Type == Tile.TAVERN)
+                    if (defaultMapBuilder.MapNodeMap[i, j].Type == Tile.TAVERN)
                     {
-                        viableTaverns.Add(defaultMapBuilder.NodeMap[i, j]);
+                        viableTaverns.Add(defaultMapBuilder.MapNodeMap[i, j]);
                     }
                 }
             }
-            Node closest = null;
+            IMapNode closest = null;
             if (viableTaverns.Any())
             {
                 closest = viableTaverns.OrderBy(c => c.MovementCost).First();

@@ -33,6 +33,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AutoMapper, Version=4.2.0.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <HintPath>..\packages\AutoMapper.4.2.0\lib\net45\AutoMapper.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="StructureMap, Version=4.0.1.318, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\structuremap.4.0.1.318\lib\net40\StructureMap.dll</HintPath>
       <Private>True</Private>
@@ -52,12 +56,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Infrastructure\Behaviors\Extensions\MapExtensions.cs" />
-    <Compile Include="Infrastructure\Behaviors\Models\CoOrdinates.cs" />
-    <Compile Include="Infrastructure\Behaviors\Models\IMapBuilder.cs" />
+    <Compile Include="Infrastructure\Behaviors\Map\CoOrdinates.cs" />
+    <Compile Include="Infrastructure\Behaviors\Map\HeroNode.cs" />
+    <Compile Include="Infrastructure\Behaviors\Map\IMapBuilder.cs" />
+    <Compile Include="Infrastructure\Behaviors\Map\IMapNode.cs" />
     <Compile Include="Infrastructure\Behaviors\Movement\ShortestPath.cs" />
-    <Compile Include="Infrastructure\Behaviors\Models\Node.cs" />
+    <Compile Include="Infrastructure\Behaviors\Map\MapNode.cs" />
     <Compile Include="Infrastructure\Behaviors\Movement\IMovement.cs" />
-    <Compile Include="Infrastructure\Behaviors\Models\DefaultMapBuilder.cs" />
+    <Compile Include="Infrastructure\Behaviors\Map\DefaultMapBuilder.cs" />
     <Compile Include="Infrastructure\Behaviors\Tactics\DumbGoldRush.cs" />
     <Compile Include="Infrastructure\Behaviors\Tactics\ITactic.cs" />
     <Compile Include="Infrastructure\Behaviors\Tactics\SurvivalGoldRush.cs" />

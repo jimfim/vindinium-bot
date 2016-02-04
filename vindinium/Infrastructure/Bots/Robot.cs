@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 
+using vindinium.Infrastructure.Behaviors.Map;
 using vindinium.Infrastructure.Behaviors.Models;
 using vindinium.Infrastructure.Behaviors.Movement;
 using vindinium.Infrastructure.Behaviors.Tactics;
@@ -33,7 +34,9 @@ namespace vindinium.Infrastructure.Bots
                 var destination = _tactic.NextDestination();
                 var route = _movement.GetShortestCompleteRouteToLocation(destination.Location);
 
-                var direction = this._server.GetDirection(_mapBuilder.HeroNode.Location, route.Any() ? route.First().Location : null);
+                
+
+                var direction = this._server.GetDirection(_mapBuilder.MyHero.Location, route.Any() ? route.First().Location : null);
                 this._server.MoveHero(direction);
                 Console.Out.WriteLine("completed turn " + this._server.CurrentTurn);
             }
@@ -49,11 +52,11 @@ namespace vindinium.Infrastructure.Bots
         private void VisualizeMap(DefaultMapBuilder server)
         {
 
-            for (int i = 0; i < server.NodeMap.GetLength(0); i++)
+            for (int i = 0; i < server.MapNodeMap.GetLength(0); i++)
             {
-                for (int j = 0; j < server.NodeMap.GetLength(1); j++)
+                for (int j = 0; j < server.MapNodeMap.GetLength(1); j++)
                 {
-                    Console.Write("{0}\t", server.NodeMap[i, j].MovementCost == int.MaxValue ? "#" : server.NodeMap[i, j].MovementCost.ToString());
+                    Console.Write("{0}\t", server.MapNodeMap[i, j].MovementCost == int.MaxValue ? "#" : server.MapNodeMap[i, j].MovementCost.ToString());
                 }
                 Console.WriteLine();
             }

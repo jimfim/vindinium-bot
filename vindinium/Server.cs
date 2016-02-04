@@ -6,6 +6,7 @@ using System.Net;
 using System.Runtime.Serialization.Json;
 using System.Text;
 
+using vindinium.Infrastructure.Behaviors.Map;
 using vindinium.Infrastructure.Behaviors.Models;
 using vindinium.Infrastructure.DTOs;
 
@@ -48,9 +49,9 @@ namespace vindinium
 
         public string ViewUrl { get; private set; }
 
-        public Hero MyHero { get; private set; }
+        public IMapNode MyHero { get; private set; }
 
-        public List<Hero> Heroes { get; private set; }
+        public List<IMapNode> Heroes { get; private set; }
 
         public int CurrentTurn { get; private set; }
 
@@ -62,7 +63,7 @@ namespace vindinium
 
         public string ErrorText { get; private set; }
 
-        public Tile[,] Board { get; private set; }
+        public IMapNode[,] Board { get; private set; }
 
         //initializes a new game, its syncronised
         public void CreateGame()
@@ -167,10 +168,9 @@ namespace vindinium
             //check to see if the Board list is already created, if it is, we just overwrite its values
             if (this.Board == null || this.Board.Length != size)
             {
-                this.Board = new Tile[size, size];
+                this.Board = new IMapNode[size, size];
             }
 
-            //convert the string to the List<List<Tile>>
             var x = 0;
             var y = 0;
             var charData = data.ToCharArray();
@@ -180,48 +180,58 @@ namespace vindinium
                 switch (charData[i])
                 {
                     case '#':
-                        this.Board[x, y] = Tile.IMPASSABLE_WOOD;
+                        this.Board[x, y] = new MapNode(Tile.IMPASSABLE_WOOD,x,y)
+                                               {
+                                                   Id = i,
+                                                   Passable = false,
+                                                   Type = Tile.IMPASSABLE_WOOD,
+                                                };
                         break;
                     case ' ':
-                        this.Board[x, y] = Tile.FREE;
+                        this.Board[x, y] = new MapNode(Tile.IMPASSABLE_WOOD, x, y)
+                        {
+                            Id = i,
+                            Passable = true,
+                            Type = Tile.FREE,
+                        };
                         break;
                     case '@':
                         switch (charData[i + 1])
                         {
                             case '1':
-                                this.Board[x, y] = Tile.HERO_1;
+                                this.Board[x, y] = new HeroNode(Tile.HERO_1, x, y);
                                 break;
                             case '2':
-                                this.Board[x, y] = Tile.HERO_2;
+                                this.Board[x, y] = new HeroNode(Tile.HERO_2, x, y);
                                 break;
                             case '3':
-                                this.Board[x, y] = Tile.HERO_3;
+                                this.Board[x, y] = new HeroNode(Tile.HERO_3, x, y);
                                 break;
                             case '4':
-                                this.Board[x, y] = Tile.HERO_4;
+                                this.Board[x, y] = new HeroNode(Tile.HERO_4, x, y);
                                 break;
                         }
                         break;
                     case '[':
-                        this.Board[x, y] = Tile.TAVERN;
+                        this.Board[x, y] = new HeroNode(Tile.TAVERN, x, y);
                         break;
                     case '$':
                         switch (charData[i + 1])
                         {
                             case '-':
-                                this.Board[x, y] = Tile.GOLD_MINE_NEUTRAL;
+                                this.Board[x, y] = new HeroNode(Tile.GOLD_MINE_NEUTRAL, x, y);
                                 break;
                             case '1':
-                                this.Board[x, y] = Tile.GOLD_MINE_1;
+                                this.Board[x, y] = new HeroNode(Tile.GOLD_MINE_1, x, y);
                                 break;
                             case '2':
-                                this.Board[x, y] = Tile.GOLD_MINE_2;
+                                this.Board[x, y] = new HeroNode(Tile.GOLD_MINE_2, x, y);
                                 break;
                             case '3':
-                                this.Board[x, y] = Tile.GOLD_MINE_3;
+                                this.Board[x, y] = new HeroNode(Tile.GOLD_MINE_3, x, y);
                                 break;
                             case '4':
-                                this.Board[x, y] = Tile.GOLD_MINE_4;
+                                this.Board[x, y] = new HeroNode(Tile.GOLD_MINE_4, x, y);
                                 break;
                         }
                         break;
