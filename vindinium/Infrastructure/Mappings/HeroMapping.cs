@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 
 using vindinium.Infrastructure.Behaviors.Map;
+using vindinium.Infrastructure.Behaviors.Models;
 using vindinium.Infrastructure.DTOs;
 
 namespace vindinium.Infrastructure.Mappings
@@ -17,8 +18,12 @@ namespace vindinium.Infrastructure.Mappings
                 .ForMember(o => o.Life, m => m.MapFrom(s => s.life))
                 .ForMember(o => o.Gold, m => m.MapFrom(s => s.gold))
                 .ForMember(o => o.Crashed, m => m.MapFrom(s => s.crashed))
-                .ForMember(o => o.Location, m => m.MapFrom(s => s.pos))
+                .ForMember(o => o.Location, m => m.MapFrom(s => new CoOrdinates(s.pos.x, s.pos.y)))
+                .ForMember(o => o.Elo, m => m.MapFrom(s => s.elo))
+                .ForMember(o => o.MineCount, m => m.MapFrom(s => s.mineCount))
+                .ForMember(o => o.Name, m => m.MapFrom(s => s.name))
                 ;
+
 
         }
     }
