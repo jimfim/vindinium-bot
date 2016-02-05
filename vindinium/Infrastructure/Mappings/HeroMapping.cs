@@ -14,17 +14,50 @@ namespace vindinium.Infrastructure.Mappings
         /// </summary>
         protected override void Configure()
         {
+
             CreateMap<Hero, HeroNode>()
-                .ForMember(o => o.Life, m => m.MapFrom(s => s.life))
-                .ForMember(o => o.Gold, m => m.MapFrom(s => s.gold))
-                .ForMember(o => o.Crashed, m => m.MapFrom(s => s.crashed))
-                .ForMember(o => o.Location, m => m.MapFrom(s => new CoOrdinates(s.pos.x, s.pos.y)))
-                .ForMember(o => o.Elo, m => m.MapFrom(s => s.elo))
-                .ForMember(o => o.MineCount, m => m.MapFrom(s => s.mineCount))
-                .ForMember(o => o.Name, m => m.MapFrom(s => s.name))
-                ;
+                .ConstructUsing(o => new HeroNode(this.GetTileType(o), o.pos.x, o.pos.y)
+                                         {
+                                             Id = o.id,
+                                             Elo = o.elo,
+                                             Gold = o.gold,
+                                             Life = o.life,
+                                             Passable = false,
+                                             Crashed = o.crashed,
+                                             MineCount = o.mineCount
+                                         })               
+                .ForAllMembers(o => o.Ignore());
 
 
+            CreateMap<Hero, VillianNode>()
+                    .ConstructUsing(o => new VillianNode(this.GetTileType(o), o.pos.x, o.pos.y)
+                    {
+                        Id = o.id,
+                        Elo = o.elo,
+                        Gold = o.gold,
+                        Life = o.life,
+                        Passable = false,
+                        Crashed = o.crashed,
+                        MineCount = o.mineCount
+                    })
+                .ForAllMembers(o => o.Ignore());
+        }
+
+        private Tile GetTileType(Hero hero)
+        {
+            switch (hero.id)
+            {
+                case 1:
+                    return Tile.HERO_1;
+                case 2:
+                    return Tile.HERO_2;
+                case 3:
+                    return Tile.HERO_3;
+                case 4:
+                    return Tile.HERO_4;
+                default:
+                    return Tile.FREE;
+            }
         }
     }
 }

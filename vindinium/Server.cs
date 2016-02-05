@@ -1,10 +1,14 @@
 ﻿#region
 
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Runtime.Serialization.Json;
 using System.Text;
+
+using AutoMapper;
 
 using vindinium.Infrastructure.Behaviors.Map;
 using vindinium.Infrastructure.Behaviors.Models;
@@ -22,6 +26,8 @@ namespace vindinium
 
         private readonly string serverUrl;
 
+        private readonly IMapper mapper;
+
         private readonly bool trainingMode;
 
         private readonly uint turns;
@@ -33,11 +39,12 @@ namespace vindinium
         }
 
         //if training mode is false, turns and DefaultMapBuilder are ignored8
-        public Server(string key, bool trainingMode, uint turns, string serverURL, string map)
+        public Server(string key, bool trainingMode, uint turns, string serverURL, string map, IMapper mapper)
         {
             this.key = key;
             this.trainingMode = trainingMode;
             this.serverUrl = serverURL;
+            this.mapper = mapper;
 
             //the reaons im doing the if statement here is so that i dont have to do it later
             if (trainingMode)
@@ -51,7 +58,9 @@ namespace vindinium
 
         public IMapNode MyHero { get; private set; }
 
-        public List<IMapNode> Heroes { get; private set; }
+        public List<IMapNode> AllCharacters { get; set; }
+
+        public IEnumerable<IMapNode> Villians { get; private set; }
 
         public int CurrentTurn { get; private set; }
 
@@ -183,12 +192,11 @@ namespace vindinium
                         this.Board[x, y] = new MapNode(Tile.IMPASSABLE_WOOD,x,y)
                                                {
                                                    Id = i,
-                                                   Passable = false,
-                                                   Type = Tile.IMPASSABLE_WOOD,
+                                                   Passable = false
                                                 };
                         break;
                     case ' ':
-                        this.Board[x, y] = new MapNode(Tile.IMPASSABLE_WOOD, x, y)
+                        this.Board[x, y] = new MapNode(Tile.FREE, x, y)
                         {
                             Id = i,
                             Passable = true,
@@ -199,39 +207,39 @@ namespace vindinium
                         switch (charData[i + 1])
                         {
                             case '1':
-                                this.Board[x, y] = new HeroNode(Tile.HERO_1, x, y);
+                                this.Board[x, y] = AllCharacters.First(h => h.Type == Tile.HERO_1);
                                 break;
                             case '2':
-                                this.Board[x, y] = new HeroNode(Tile.HERO_2, x, y);
+                                this.Board[x, y] = AllCharacters.First(h => h.Type == Tile.HERO_2);
                                 break;
                             case '3':
-                                this.Board[x, y] = new HeroNode(Tile.HERO_3, x, y);
+                                this.Board[x, y] = AllCharacters.First(h => h.Type == Tile.HERO_3);
                                 break;
                             case '4':
-                                this.Board[x, y] = new HeroNode(Tile.HERO_4, x, y);
+                                this.Board[x, y] = AllCharacters.First(h => h.Type == Tile.HERO_4);
                                 break;
                         }
                         break;
                     case '[':
-                        this.Board[x, y] = new HeroNode(Tile.TAVERN, x, y);
+                        this.Board[x, y] = new MapNode(Tile.TAVERN, x, y);
                         break;
                     case '$':
                         switch (charData[i + 1])
                         {
                             case '-':
-                                this.Board[x, y] = new HeroNode(Tile.GOLD_MINE_NEUTRAL, x, y);
+                                this.Board[x, y] = new MapNode(Tile.GOLD_MINE_NEUTRAL, x, y);
                                 break;
                             case '1':
-                                this.Board[x, y] = new HeroNode(Tile.GOLD_MINE_1, x, y);
+                                this.Board[x, y] = new MapNode(Tile.GOLD_MINE_1, x, y);
                                 break;
                             case '2':
-                                this.Board[x, y] = new HeroNode(Tile.GOLD_MINE_2, x, y);
+                                this.Board[x, y] = new MapNode(Tile.GOLD_MINE_2, x, y);
                                 break;
                             case '3':
-                                this.Board[x, y] = new HeroNode(Tile.GOLD_MINE_3, x, y);
+                                this.Board[x, y] = new MapNode(Tile.GOLD_MINE_3, x, y);
                                 break;
                             case '4':
-                                this.Board[x, y] = new HeroNode(Tile.GOLD_MINE_4, x, y);
+                                this.Board[x, y] = new MapNode(Tile.GOLD_MINE_4, x, y);
                                 break;
                         }
                         break;
@@ -249,9 +257,7 @@ namespace vindinium
 
         private void Deserialize(string json)
         {
-            // convert string to stream
             var byteArray = Encoding.UTF8.GetBytes(json);
-            //byte[] byteArray = Encoding.ASCII.GetBytes(json);
             var stream = new MemoryStream(byteArray);
 
             var ser = new DataContractJsonSerializer(typeof(GameResponse));
@@ -260,14 +266,106 @@ namespace vindinium
             this.playUrl = gameResponse.playUrl;
             this.ViewUrl = gameResponse.viewUrl;
 
-            this.MyHero = gameResponse.hero;
-            this.Heroes = gameResponse.game.heroes;
+            this.MyHero = mapper.Map<HeroNode>(gameResponse.hero);
+            this.Villians = this.mapper.Map<List<VillianNode>>(gameResponse.game.heroes.Where(h => h.id != MyHero.Id));
+            this.AllCharacters = new List<IMapNode>();
+            AllCharacters.Add(MyHero);
+            AllCharacters.AddRange(Villians);
 
             this.CurrentTurn = gameResponse.game.turn;
             this.MaxTurns = gameResponse.game.maxTurns;
             this.Finished = gameResponse.game.finished;
 
             this.CreateBoard(gameResponse.game.board.size, gameResponse.game.board.tiles);
+            PopulateNodeParents();
+
+            VisualizeMap(this);
+
         }
+
+        private void VisualizeMap(Server server)
+        {
+            Console.Clear();
+            for (int i = 0; i < server.Board.GetLength(0); i++)
+            {
+                for (int j = 0; j < server.Board.GetLength(1); j++)
+                {
+                    switch (server.Board[i, j].Type)
+                    {
+                        case Tile.FREE:
+                            Console.Write('_');
+                            break;
+                        case Tile.GOLD_MINE_1:
+                        case Tile.GOLD_MINE_2:
+                        case Tile.GOLD_MINE_3:
+                        case Tile.GOLD_MINE_4:
+                        case Tile.GOLD_MINE_NEUTRAL:
+                            Console.Write('$');
+                            break;
+                        case Tile.HERO_1:
+                        case Tile.HERO_2:
+                        case Tile.HERO_3:
+                        case Tile.HERO_4:
+                            Console.Write('@');
+                            break;
+                        case Tile.TAVERN:
+                            Console.Write('B');
+                            break;
+                        case Tile.IMPASSABLE_WOOD:
+                            Console.Write('#');
+                            break;
+                        default:
+                            Console.Write(' ');
+                            break;
+                    }
+
+                }
+                Console.WriteLine();
+            }
+        }
+
+        private void PopulateNodeParents()
+        {
+            for (int i = 0; i < this.Board.GetLength(0); i++)
+            {
+                for (int j = 0; j < this.Board.GetLength(1); j++)
+                {
+                    var node = this.Board[i, j];
+                    var parents = GetParents(this.Board[i, j]);
+                    node.Parents = parents;
+                }
+            }
+        }
+
+        private List<IMapNode> GetParents(IMapNode sourceMapNode)
+        {
+            List<IMapNode> results = new List<IMapNode>();
+            if (sourceMapNode.Location.Y - 1 >= 0)
+            {
+                var north = this.Board[sourceMapNode.Location.X, sourceMapNode.Location.Y - 1];
+                results.Add(north);
+            }
+
+            if (sourceMapNode.Location.Y + 1 <= this.Board.GetLength(0) - 1)
+            {
+                var south = this.Board[sourceMapNode.Location.X, sourceMapNode.Location.Y + 1];
+                results.Add(south);
+            }
+
+            if (sourceMapNode.Location.X + 1 <= this.Board.GetLength(1) - 1)
+            {
+                var east = this.Board[sourceMapNode.Location.X + 1, sourceMapNode.Location.Y];
+                results.Add(east);
+            }
+
+            if (sourceMapNode.Location.X - 1 >= 0)
+            {
+                var west = this.Board[sourceMapNode.Location.X - 1, sourceMapNode.Location.Y];
+                results.Add(west);
+            }
+            return results;
+        }
+
+
     }
 }

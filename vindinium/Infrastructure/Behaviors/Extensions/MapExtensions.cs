@@ -17,19 +17,19 @@ namespace vindinium.Infrastructure.Behaviors.Extensions
         /// </summary>
         /// <param name="defaultMapBuilder"></param>
         /// <returns></returns>
-        public static IMapNode GetClosestChest(this IMapBuilder defaultMapBuilder)
+        public static IMapNode GetClosestChest(this Server server)
         {
             var viableChests = new List<IMapNode>();
-            for (int i = 0; i < defaultMapBuilder.MapNodeMap.GetLength(0); i++)
+            for (int i = 0; i < server.Board.GetLength(0); i++)
             {
-                for (int j = 0; j < defaultMapBuilder.MapNodeMap.GetLength(1); j++)
+                for (int j = 0; j < server.Board.GetLength(1); j++)
                 {
-                    if (defaultMapBuilder.MapNodeMap[i, j].Type == Tile.GOLD_MINE_NEUTRAL ||
-                        defaultMapBuilder.MapNodeMap[i, j].Type == Tile.GOLD_MINE_2 ||
-                        defaultMapBuilder.MapNodeMap[i, j].Type == Tile.GOLD_MINE_3 ||
-                        defaultMapBuilder.MapNodeMap[i, j].Type == Tile.GOLD_MINE_4)
+                    if (server.Board[i, j].Type == Tile.GOLD_MINE_NEUTRAL ||
+                        server.Board[i, j].Type == Tile.GOLD_MINE_2 ||
+                        server.Board[i, j].Type == Tile.GOLD_MINE_3 ||
+                        server.Board[i, j].Type == Tile.GOLD_MINE_4)
                     {
-                        viableChests.Add(defaultMapBuilder.MapNodeMap[i, j]);
+                        viableChests.Add(server.Board[i, j]);
                     }
                 }
             }
@@ -46,16 +46,16 @@ namespace vindinium.Infrastructure.Behaviors.Extensions
         /// </summary>
         /// <param name="defaultMapBuilder"></param>
         /// <returns></returns>
-        public static IMapNode GetClosestTavern(this IMapBuilder defaultMapBuilder)
+        public static IMapNode GetClosestTavern(this Server server)
         {
             var viableTaverns = new List<IMapNode>();
-            for (int i = 0; i < defaultMapBuilder.MapNodeMap.GetLength(0); i++)
+            for (int i = 0; i < server.Board.GetLength(0); i++)
             {
-                for (int j = 0; j < defaultMapBuilder.MapNodeMap.GetLength(1); j++)
+                for (int j = 0; j < server.Board.GetLength(1); j++)
                 {
-                    if (defaultMapBuilder.MapNodeMap[i, j].Type == Tile.TAVERN)
+                    if (server.Board[i, j].Type == Tile.TAVERN)
                     {
-                        viableTaverns.Add(defaultMapBuilder.MapNodeMap[i, j]);
+                        viableTaverns.Add(server.Board[i, j]);
                     }
                 }
             }

@@ -9,13 +9,13 @@ namespace vindinium.Infrastructure.Behaviors.Movement
 {
 	public class DefaultMovement : IMovement
     {
-		private readonly IMapBuilder defaultMapBuilderBuilder;
+		private readonly Server server;
 
-	    private IMapNode HeroMapNode => this.defaultMapBuilderBuilder.MyHero;       
+	    private IMapNode Hero => this.server.MyHero;       
 
-        public DefaultMovement(IMapBuilder board)
+        public DefaultMovement(Server board)
         {
-            this.defaultMapBuilderBuilder = board;
+            this.server = board;
             PopulateMovementCost();
         }
 
@@ -23,7 +23,7 @@ namespace vindinium.Infrastructure.Behaviors.Movement
         public List<IMapNode> GetShortestCompleteRouteToLocation(CoOrdinates closestChest)
         {
             var result = new List<IMapNode>();
-            var node = this.defaultMapBuilderBuilder.MapNodeMap[closestChest.X, closestChest.Y];
+            var node = this.server.Board[closestChest.X, closestChest.Y];
             int depth;
             IMapNode target = node;
             do
@@ -37,7 +37,7 @@ namespace vindinium.Infrastructure.Behaviors.Movement
                     return null;
                 }
             }
-            while (depth > 1); // 0 is the hero
+            while (depth > 1); // 0 is the Hero
             result = result.OrderBy(n => n.MovementCost).ToList();
             return result;
         }
@@ -45,10 +45,10 @@ namespace vindinium.Infrastructure.Behaviors.Movement
 	    private void PopulateMovementCost()
 	    {
 	        int depth = 0;
-	        this.HeroMapNode.MovementCost = depth;
+	        this.Hero.MovementCost = depth;
 	        depth++;
 
-            foreach (var heroNode in this.HeroMapNode.Parents)
+            foreach (var heroNode in this.Hero.Parents)
 	        {
                 AssignCost(depth, heroNode);
 	            if (heroNode.Passable)

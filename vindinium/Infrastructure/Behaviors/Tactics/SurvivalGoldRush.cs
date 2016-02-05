@@ -11,9 +11,9 @@ namespace vindinium.Infrastructure.Behaviors.Tactics
 {
     public class SurvivalGoldRush : ITactic
     {
-        private readonly IMapBuilder game;
+        private readonly Server game;
 
-        public SurvivalGoldRush(IMapBuilder game)
+        public SurvivalGoldRush(Server game)
         {
             this.game = game;
         }

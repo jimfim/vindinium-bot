@@ -57,13 +57,13 @@
   <ItemGroup>
     <Compile Include="Infrastructure\Behaviors\Extensions\MapExtensions.cs" />
     <Compile Include="Infrastructure\Behaviors\Map\CoOrdinates.cs" />
+    <Compile Include="Infrastructure\Behaviors\Map\VillianNode.cs" />
     <Compile Include="Infrastructure\Behaviors\Map\HeroNode.cs" />
-    <Compile Include="Infrastructure\Behaviors\Map\IMapBuilder.cs" />
+    <Compile Include="Infrastructure\Behaviors\Map\ICharacterNode.cs" />
     <Compile Include="Infrastructure\Behaviors\Map\IMapNode.cs" />
     <Compile Include="Infrastructure\Behaviors\Movement\ShortestPath.cs" />
     <Compile Include="Infrastructure\Behaviors\Map\MapNode.cs" />
     <Compile Include="Infrastructure\Behaviors\Movement\IMovement.cs" />
-    <Compile Include="Infrastructure\Behaviors\Map\DefaultMapBuilder.cs" />
     <Compile Include="Infrastructure\Behaviors\Tactics\DumbGoldRush.cs" />
     <Compile Include="Infrastructure\Behaviors\Tactics\ITactic.cs" />
     <Compile Include="Infrastructure\Behaviors\Tactics\SurvivalGoldRush.cs" />
@@ -76,6 +76,7 @@
     <Compile Include="Infrastructure\DTOs\GameResponse.cs" />
     <Compile Include="Infrastructure\DTOs\Hero.cs" />
     <Compile Include="Infrastructure\DTOs\Pos.cs" />
+    <Compile Include="Infrastructure\Mappings\HeroMapping.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Infrastructure\Bots\RandomBot.cs" />
     <Compile Include="Server.cs" />

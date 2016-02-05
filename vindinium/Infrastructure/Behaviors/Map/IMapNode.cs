@@ -15,7 +15,7 @@ namespace vindinium.Infrastructure.Behaviors.Map
 
         CoOrdinates Location { get; }
 
-        Tile Type { get; set; }
+        Tile Type { get; }
 
         bool Passable { get; set; }
     }

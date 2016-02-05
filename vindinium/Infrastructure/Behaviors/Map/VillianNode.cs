@@ -6,7 +6,7 @@ using vindinium.Infrastructure.DTOs;
 
 namespace vindinium.Infrastructure.Behaviors.Map
 {
-    public class HeroNode : IMapNode
+    public class VillianNode : IMapNode, ICharacterNode
     {
         public string Name;
         //Score
@@ -26,13 +26,13 @@ namespace vindinium.Infrastructure.Behaviors.Map
 
         public int MovementCost { get; set; }
 
-        public CoOrdinates Location { get; }
+        public CoOrdinates Location { get; set; }
 
-        public Tile Type { get; }
+        public Tile Type { get; set; }
 
         public bool Passable { get; set; }
 
-        public HeroNode(Tile type, int x, int y)
+        public VillianNode(Tile type, int x, int y)
         {
             this.Type = type;
             this.Passable = false;

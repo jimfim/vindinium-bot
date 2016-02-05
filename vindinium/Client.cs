@@ -25,10 +25,10 @@ namespace vindinium
             });
             config.AssertConfigurationIsValid();
 
-            config.CreateMapper();
+            var mapper = config.CreateMapper();
             
 
-            Server server = new Server(args[0], args[1] != "arena", uint.Parse(args[2]), serverUrl, args[4]);
+            Server server = new Server(args[0], args[1] != "arena", uint.Parse(args[2]), serverUrl, args[4], mapper);
 			server.CreateGame();
 			if (server.Errored == false)
 			{
