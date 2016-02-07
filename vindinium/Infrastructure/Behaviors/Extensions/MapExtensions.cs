@@ -15,24 +15,12 @@ namespace vindinium.Infrastructure.Behaviors.Extensions
         /// <summary>
         /// returns closest *accessible* gold mine,and null if none available
         /// </summary>
-        /// <param name="defaultMapBuilder"></param>
+        /// <param name="server"></param>
         /// <returns></returns>
         public static IMapNode GetClosestChest(this Server server)
         {
-            var viableChests = new List<IMapNode>();
-            for (int i = 0; i < server.Board.GetLength(0); i++)
-            {
-                for (int j = 0; j < server.Board.GetLength(1); j++)
-                {
-                    if (server.Board[i, j].Type == Tile.GOLD_MINE_NEUTRAL ||
-                        server.Board[i, j].Type == Tile.GOLD_MINE_2 ||
-                        server.Board[i, j].Type == Tile.GOLD_MINE_3 ||
-                        server.Board[i, j].Type == Tile.GOLD_MINE_4)
-                    {
-                        viableChests.Add(server.Board[i, j]);
-                    }
-                }
-            }
+            var tileset = new List<Tile> {Tile.GOLD_MINE_2, Tile.GOLD_MINE_3, Tile.GOLD_MINE_4, Tile.GOLD_MINE_NEUTRAL};
+            var viableChests = Find(server, tileset);
             IMapNode closest = null;
             if (viableChests.Any())
             {
@@ -44,27 +32,37 @@ namespace vindinium.Infrastructure.Behaviors.Extensions
         /// <summary>
         /// returns closest *accessible* gold mine,and null if none available
         /// </summary>
-        /// <param name="defaultMapBuilder"></param>
+        /// <param name="server"></param>
         /// <returns></returns>
         public static IMapNode GetClosestTavern(this Server server)
         {
-            var viableTaverns = new List<IMapNode>();
-            for (int i = 0; i < server.Board.GetLength(0); i++)
-            {
-                for (int j = 0; j < server.Board.GetLength(1); j++)
-                {
-                    if (server.Board[i, j].Type == Tile.TAVERN)
-                    {
-                        viableTaverns.Add(server.Board[i, j]);
-                    }
-                }
-            }
             IMapNode closest = null;
+            var viableTaverns = Find(server,Tile.TAVERN);
             if (viableTaverns.Any())
             {
                 closest = viableTaverns.OrderBy(c => c.MovementCost).First();
             }
             return closest;
+        }
+
+        private static List<IMapNode> Find(Server server,Tile tile)
+        {
+            var tileset = new List<Tile> {tile};
+            return Find(server, tileset);
+        }
+
+        private static List<IMapNode> Find(Server server, List<Tile> tileset)
+        {
+            var viableTargets = new List<IMapNode>();
+            for (int y = 0; y < server.Board.Length; y++)
+            {
+                for (int x = 0; x < server.Board.Length; x++)
+                {
+                    viableTargets.AddRange(from tile in tileset where server.Board[x][y].Type == tile select server.Board[x][y]);
+                }
+            }
+            return viableTargets;
+            
         }
     }
 }

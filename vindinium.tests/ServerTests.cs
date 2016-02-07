@@ -62,8 +62,8 @@ namespace vindinium.tests
 
 	    private void HeroMappingtest()
 	    {
-            Server server = new Server();
-            server.CreateBoard(size, map);
+     //       Server server = new Server();
+     //       server.CreateBoard(size, map);
 
         }
 	}

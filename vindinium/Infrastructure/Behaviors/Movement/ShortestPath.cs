@@ -23,7 +23,7 @@ namespace vindinium.Infrastructure.Behaviors.Movement
         public List<IMapNode> GetShortestCompleteRouteToLocation(CoOrdinates closestChest)
         {
             var result = new List<IMapNode>();
-            var node = this.server.Board[closestChest.X, closestChest.Y];
+            var node = this.server.Board[closestChest.X][closestChest.Y];
             int depth;
             IMapNode target = node;
             do

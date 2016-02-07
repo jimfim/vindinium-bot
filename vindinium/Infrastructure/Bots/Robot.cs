@@ -35,6 +35,8 @@ namespace vindinium.Infrastructure.Bots
                 var route = _movement.GetShortestCompleteRouteToLocation(destination.Location);
                 var direction = this._server.GetDirection(_server.MyHero.Location, route.Any() ? route.First().Location : null);
                 this._server.MoveHero(direction);
+                Console.Out.WriteLine("Target {0}", destination.Type);
+                Console.Out.WriteLine("Moving {0}", direction);
                 Console.Out.WriteLine("completed turn " + this._server.CurrentTurn);
             }
 

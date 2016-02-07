@@ -16,7 +16,7 @@ namespace vindinium.Infrastructure.Mappings
         {
 
             CreateMap<Hero, HeroNode>()
-                .ConstructUsing(o => new HeroNode(this.GetTileType(o), o.pos.x, o.pos.y)
+                .ConstructUsing(o => new HeroNode(this.GetTileType(o), o.pos.y, o.pos.x)
                                          {
                                              Id = o.id,
                                              Elo = o.elo,
@@ -30,7 +30,7 @@ namespace vindinium.Infrastructure.Mappings
 
 
             CreateMap<Hero, VillianNode>()
-                    .ConstructUsing(o => new VillianNode(this.GetTileType(o), o.pos.x, o.pos.y)
+                    .ConstructUsing(o => new VillianNode(this.GetTileType(o), o.pos.y, o.pos.x)
                     {
                         Id = o.id,
                         Elo = o.elo,
