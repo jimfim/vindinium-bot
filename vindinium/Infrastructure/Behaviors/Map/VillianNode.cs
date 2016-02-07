@@ -6,7 +6,7 @@ using vindinium.Infrastructure.DTOs;
 
 namespace vindinium.Infrastructure.Behaviors.Map
 {
-    public class VillianNode : IMapNode, ICharacterNode
+    public class VillianNode : IMapNode
     {
         public string Name;
         //Score

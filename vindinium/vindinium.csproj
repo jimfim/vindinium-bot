@@ -59,7 +59,6 @@
     <Compile Include="Infrastructure\Behaviors\Map\CoOrdinates.cs" />
     <Compile Include="Infrastructure\Behaviors\Map\VillianNode.cs" />
     <Compile Include="Infrastructure\Behaviors\Map\HeroNode.cs" />
-    <Compile Include="Infrastructure\Behaviors\Map\ICharacterNode.cs" />
     <Compile Include="Infrastructure\Behaviors\Map\IMapNode.cs" />
     <Compile Include="Infrastructure\Behaviors\Movement\ShortestPath.cs" />
     <Compile Include="Infrastructure\Behaviors\Map\MapNode.cs" />

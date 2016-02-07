@@ -30,7 +30,7 @@ namespace vindinium.Infrastructure.Behaviors.Movement
             {
                 result.Add(target);
                 depth = target.MovementCost;
-                target = target.Parents.Where(n => n.Type != Tile.GOLD_MINE_1 && n.MovementCost > 0).OrderBy(n => n.MovementCost).First();
+                target = target.Parents.Where(n => n.Type != MyTreasure() && n.MovementCost > 0).OrderBy(n => n.MovementCost).First();
                 // no route to anything protection.. just wait
                 if (result.Count > 100)
                 {
@@ -41,6 +41,23 @@ namespace vindinium.Infrastructure.Behaviors.Movement
             result = result.OrderBy(n => n.MovementCost).ToList();
             return result;
         }
+
+	    private Tile MyTreasure()
+	    {
+	        switch (server.MyHero.Type)
+	        {
+	            case Tile.HERO_1:
+                    return Tile.GOLD_MINE_1;
+                case Tile.HERO_2:
+                    return Tile.GOLD_MINE_2;
+                case Tile.HERO_3:
+                    return Tile.GOLD_MINE_3;
+                case Tile.HERO_4:
+                    return Tile.GOLD_MINE_4;
+                default:
+                    return Tile.GOLD_MINE_1;
+	        }
+	    }
 
 	    private void PopulateMovementCost()
 	    {

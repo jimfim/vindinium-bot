@@ -27,17 +27,29 @@ namespace vindinium.Infrastructure.Bots
         {
             while (this._server.Finished == false && this._server.Errored == false)
             {
-              //  _mapBuilder = new DefaultMapBuilder(_server);
                 _tactic = new SurvivalGoldRush(_server);
                 _movement = new DefaultMovement(_server);
 
                 var destination = _tactic.NextDestination();
+
                 var route = _movement.GetShortestCompleteRouteToLocation(destination.Location);
+
                 var direction = this._server.GetDirection(_server.MyHero.Location, route.Any() ? route.First().Location : null);
+
                 this._server.MoveHero(direction);
-                Console.Out.WriteLine("Target {0}", destination.Type);
-                Console.Out.WriteLine("Moving {0}", direction);
-                Console.Out.WriteLine("completed turn " + this._server.CurrentTurn);
+
+                Console.Out.WriteLine("=========================================");
+                Console.Out.WriteLine("Target Location : {0},{1}", destination.Location.X, destination.Location.Y);
+                Console.Out.WriteLine("Target Cost \t: {0}", destination.MovementCost);
+                Console.Out.WriteLine("Target Type \t: {0}", destination.Type);
+                Console.Out.WriteLine("=========================================");
+                Console.Out.WriteLine("Hero Location \t: {0},{1}", _server.MyHero.Location.X,_server.MyHero.Location.Y);
+                Console.Out.WriteLine("Hero Life \t: {0}", (_server.MyHero as HeroNode).Life);
+                Console.Out.WriteLine("Hero Gold \t: {0}", (_server.MyHero as HeroNode).Gold);
+                Console.Out.WriteLine("Hero Mines \t: {0}", (_server.MyHero as HeroNode).MineCount);
+                Console.Out.WriteLine("Hero Moving \t: {0}", direction);
+                Console.Out.WriteLine("=========================================");
+                Console.Out.WriteLine("Completed Turn " + this._server.CurrentTurn);
             }
 
             if (this._server.Errored)
