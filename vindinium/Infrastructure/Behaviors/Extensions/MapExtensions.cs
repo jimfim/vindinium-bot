@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,6 +13,32 @@ namespace vindinium.Infrastructure.Behaviors.Extensions
 {
     public static class MapExtensions
     {
+
+        public static List<Tile> NotMyTreasure(this Server server)
+        {
+            var tileset = new List<Tile> { Tile.GOLD_MINE_1, Tile.GOLD_MINE_2, Tile.GOLD_MINE_3, Tile.GOLD_MINE_4, Tile.GOLD_MINE_NEUTRAL };
+            var mytreasure = MyTreasure(server);
+            tileset.Remove(mytreasure);
+            return tileset;
+        }
+
+
+        public static Tile MyTreasure(this Server server)
+        {
+            switch (server.MyHero.Type)
+            {
+                case Tile.HERO_1:
+                    return Tile.GOLD_MINE_1;
+                case Tile.HERO_2:
+                    return Tile.GOLD_MINE_2;
+                case Tile.HERO_3:
+                    return Tile.GOLD_MINE_3;
+                case Tile.HERO_4:
+                    return Tile.GOLD_MINE_4;
+                default:
+                    return Tile.GOLD_MINE_1;
+            }
+        }
         /// <summary>
         /// returns closest *accessible* gold mine,and null if none available
         /// </summary>
@@ -19,8 +46,9 @@ namespace vindinium.Infrastructure.Behaviors.Extensions
         /// <returns></returns>
         public static IMapNode GetClosestChest(this Server server)
         {
-            var tileset = new List<Tile> {Tile.GOLD_MINE_2, Tile.GOLD_MINE_3, Tile.GOLD_MINE_4, Tile.GOLD_MINE_NEUTRAL};
-            var viableChests = Find(server, tileset);
+
+            
+            var viableChests = Find(server, server.NotMyTreasure());
             IMapNode closest = null;
             if (viableChests.Any())
             {
@@ -28,6 +56,7 @@ namespace vindinium.Infrastructure.Behaviors.Extensions
             }
             return closest;
         }
+
 
         /// <summary>
         /// returns closest *accessible* gold mine,and null if none available

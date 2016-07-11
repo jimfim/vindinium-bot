@@ -33,8 +33,12 @@ namespace vindinium.Infrastructure.Bots
                 var destination = _tactic.NextDestination();
 
                 var route = _movement.GetShortestCompleteRouteToLocation(destination.Location);
-
-                var direction = this._server.GetDirection(_server.MyHero.Location, route.Any() ? route.First().Location : null);
+                string direction = "Stay";
+                if (route != null)
+                {
+                    direction = this._server.GetDirection(_server.MyHero.Location, route.Any() ? route.First().Location : null);
+                }
+                
 
                 this._server.MoveHero(direction);
 

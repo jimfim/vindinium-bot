@@ -64,6 +64,7 @@
     <Compile Include="Infrastructure\Behaviors\Map\MapNode.cs" />
     <Compile Include="Infrastructure\Behaviors\Movement\IMovement.cs" />
     <Compile Include="Infrastructure\Behaviors\Tactics\DumbGoldRush.cs" />
+    <Compile Include="Infrastructure\Behaviors\Tactics\GeneticLearning.cs" />
     <Compile Include="Infrastructure\Behaviors\Tactics\ITactic.cs" />
     <Compile Include="Infrastructure\Behaviors\Tactics\SurvivalGoldRush.cs" />
     <Compile Include="Infrastructure\Bots\Robot.cs" />

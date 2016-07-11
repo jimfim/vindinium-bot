@@ -1,6 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-
+using vindinium.Infrastructure.Behaviors.Extensions;
 using vindinium.Infrastructure.Behaviors.Map;
 using vindinium.Infrastructure.Behaviors.Models;
 using vindinium.Infrastructure.DTOs;
@@ -23,43 +24,35 @@ namespace vindinium.Infrastructure.Behaviors.Movement
         public List<IMapNode> GetShortestCompleteRouteToLocation(CoOrdinates closestChest)
         {
             var result = new List<IMapNode>();
-            var node = this.server.Board[closestChest.X][closestChest.Y];
-            int depth;
-            IMapNode target = node;
-            do
+            try
             {
-                result.Add(target);
-                depth = target.MovementCost;
-                target = target.Parents.Where(n => n.Type != MyTreasure() && n.MovementCost > 0).OrderBy(n => n.MovementCost).First();
-                // no route to anything protection.. just wait
-                if (result.Count > 100)
+                var node = this.server.Board[closestChest.X][closestChest.Y];
+                int depth;
+                IMapNode target = node;
+                do
                 {
-                    return null;
-                }
+                    result.Add(target);
+                    depth = target.MovementCost;
+                    target =
+                        target.Parents.Where(n => n.Passable && n.MovementCost > 0).OrderBy(n => n.MovementCost).First();
+                    // no route to anything protection.. just wait
+                    if (result.Count > 100)
+                    {
+                        return null;
+                    }
+                } while (depth > 1); // 0 is the Hero
+                result = result.OrderBy(n => n.MovementCost).ToList();
             }
-            while (depth > 1); // 0 is the Hero
-            result = result.OrderBy(n => n.MovementCost).ToList();
+            catch (Exception ex)
+            {
+                
+            }
+            
             return result;
         }
+        
 
-	    private Tile MyTreasure()
-	    {
-	        switch (server.MyHero.Type)
-	        {
-	            case Tile.HERO_1:
-                    return Tile.GOLD_MINE_1;
-                case Tile.HERO_2:
-                    return Tile.GOLD_MINE_2;
-                case Tile.HERO_3:
-                    return Tile.GOLD_MINE_3;
-                case Tile.HERO_4:
-                    return Tile.GOLD_MINE_4;
-                default:
-                    return Tile.GOLD_MINE_1;
-	        }
-	    }
-
-	    private void PopulateMovementCost()
+        private void PopulateMovementCost()
 	    {
 	        int depth = 0;
 	        this.Hero.MovementCost = depth;
@@ -92,15 +85,12 @@ namespace vindinium.Infrastructure.Behaviors.Movement
 	    {
             if (cost < mapNode.MovementCost)
             {
-                if (mapNode.Type == Tile.IMPASSABLE_WOOD || mapNode.Type == Tile.GOLD_MINE_1)
+                if (mapNode.Type == Tile.IMPASSABLE_WOOD || mapNode.Type == server.MyTreasure())
                 {
                     mapNode.Passable = false;
                     mapNode.MovementCost = -1;
                 }
-                else if (mapNode.Type == Tile.GOLD_MINE_2 || 
-                    mapNode.Type == Tile.GOLD_MINE_3 || 
-                    mapNode.Type == Tile.GOLD_MINE_4 || 
-                    mapNode.Type == Tile.GOLD_MINE_NEUTRAL ||
+                else if (server.NotMyTreasure().Contains(mapNode.Type) ||
                     mapNode.Type == Tile.TAVERN ||
                     mapNode.Type == Tile.HERO_1 ||
                     mapNode.Type == Tile.HERO_2 ||
