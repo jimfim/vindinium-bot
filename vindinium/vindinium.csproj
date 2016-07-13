@@ -71,7 +71,7 @@
     <Compile Include="Infrastructure\Bots\IBot.cs" />
     <Compile Include="Infrastructure\DTOs\Board.cs" />
     <Compile Include="Infrastructure\DTOs\Direction.cs" />
-    <Compile Include="Client.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Infrastructure\DTOs\Game.cs" />
     <Compile Include="Infrastructure\DTOs\GameResponse.cs" />
     <Compile Include="Infrastructure\DTOs\Hero.cs" />

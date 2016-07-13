@@ -21,14 +21,16 @@ namespace vindinium.Infrastructure.Behaviors.Tactics
         public IMapNode NextDestination()
         {
             var hero = game.MyHero as HeroNode;
-            if (hero != null && hero.Life < 30 )
+            if (hero == null)
             {
                 return game.GetClosestTavern();
             }
-            if (hero != null && (hero.Life < 90 && this.game.GetClosestTavern().MovementCost < 2))
+
+            if ((hero.Life < 30) || (hero.Life < 90 && this.game.GetClosestTavern().MovementCost < 2))
             {
                 return game.GetClosestTavern();
             }
+
             return game.GetClosestChest();
         }
     }

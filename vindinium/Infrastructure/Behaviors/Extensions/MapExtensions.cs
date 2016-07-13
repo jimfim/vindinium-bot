@@ -23,6 +23,15 @@ namespace vindinium.Infrastructure.Behaviors.Extensions
         }
 
 
+        public static List<Tile> NotMe(this Server server)
+        {
+            var tileset = new List<Tile> { Tile.HERO_1, Tile.HERO_2, Tile.HERO_3, Tile.HERO_4};
+            tileset.Remove(server.MyHero.Type);
+            return tileset;
+        }
+
+
+
         public static Tile MyTreasure(this Server server)
         {
             switch (server.MyHero.Type)
@@ -46,8 +55,6 @@ namespace vindinium.Infrastructure.Behaviors.Extensions
         /// <returns></returns>
         public static IMapNode GetClosestChest(this Server server)
         {
-
-            
             var viableChests = Find(server, server.NotMyTreasure());
             IMapNode closest = null;
             if (viableChests.Any())
@@ -67,6 +74,17 @@ namespace vindinium.Infrastructure.Behaviors.Extensions
         {
             IMapNode closest = null;
             var viableTaverns = Find(server,Tile.TAVERN);
+            if (viableTaverns.Any())
+            {
+                closest = viableTaverns.OrderBy(c => c.MovementCost).First();
+            }
+            return closest;
+        }
+
+        public static IMapNode GetClosestEnemy(this Server server)
+        {
+            IMapNode closest = null;
+            var viableTaverns = Find(server, server.NotMe());
             if (viableTaverns.Any())
             {
                 closest = viableTaverns.OrderBy(c => c.MovementCost).First();
