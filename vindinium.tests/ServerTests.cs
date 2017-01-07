@@ -32,7 +32,7 @@ namespace vindinium.tests
             //Server server = new Server();
             //server.CreateBoard(size, map);
             //DefaultMapBuilder board = new DefaultMapBuilder(server);
-            //var movement = new DefaultMovement(board);
+            //var movement = new ShortestPath(board);
             //var closestChest = movement.GetClosestChest();
 
             //var route = movement.GetShortestCompleteRouteToLocation(closestChest.Location);

@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using FluentNHibernate.Automapping;
+﻿using FluentNHibernate.Automapping;
 using FluentNHibernate.Cfg;
 using FluentNHibernate.Cfg.Db;
 using NHibernate;
 using NHibernate.Cfg;
 using NHibernate.Tool.hbm2ddl;
+using vindinium.common.ClassMap;
 using vindinium.common.Entities;
 
 namespace vindinium.common.Data
@@ -21,8 +17,7 @@ namespace vindinium.common.Data
                 .Database(MsSqlConfiguration.MsSql2012
                     .ConnectionString("Data Source=JIM-PC\\SQLEXPRESS;Integrated Security=SSPI;Initial Catalog=vindinium"))
                 .Mappings(m =>
-                    m.AutoMappings
-                        .Add(AutoMap.AssemblyOf<Hero>()))
+                    m.FluentMappings.AddFromAssemblyOf<RoundMap>())
                     .ExposeConfiguration(Config)
                 .BuildSessionFactory();
             return sessionFactory;

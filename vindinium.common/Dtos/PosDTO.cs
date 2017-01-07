@@ -1,6 +1,6 @@
-namespace vindinium.common.Dtos
+﻿namespace vindinium.common.Dtos
 {
-    public class SpawnPos
+    public class PosDTO
     {
         public int X { get; set; }
         public int Y { get; set; }

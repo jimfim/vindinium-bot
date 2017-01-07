@@ -21,22 +21,20 @@ namespace vindinium
 
             var mapper = config.CreateMapper();
 
-            int count = 0;
-            while (count < 100)
+
+            Server server = new Server(args[0], args[1] != "arena", uint.Parse(args[2]), serverUrl, args[4], mapper);
+            server.CreateGame();
+            if (server.Errored == false)
             {
-                Server server = new Server(args[0], args[1] != "arena", uint.Parse(args[2]), serverUrl, args[4], mapper);
-                server.CreateGame();
-                if (server.Errored == false)
-                {
-                    //opens up a webpage so you can view the game, doing it async so we dont time out
-                    new Thread(delegate() { System.Diagnostics.Process.Start(server.ViewUrl); }).Start();
-                }
-
-
-                var bot = new Robot(server);
-                bot.Run();
-                count++;
+                //opens up a webpage so you can view the game, doing it async so we dont time out
+                new Thread(delegate() { System.Diagnostics.Process.Start(server.ViewUrl); }).Start();
             }
+
+
+            var bot = new Robot(server);
+            bot.Run();
+    
+            
 
             Console.Out.WriteLine("done");
         }

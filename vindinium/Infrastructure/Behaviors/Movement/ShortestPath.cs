@@ -8,15 +8,18 @@ using vindinium.Infrastructure.DTOs;
 
 namespace vindinium.Infrastructure.Behaviors.Movement
 {
-	public class DefaultMovement : IMovement
+    /// <summary>
+    /// A* search
+    /// </summary>
+	public class ShortestPath : IMovement
     {
-		private readonly Server server;
+		private readonly Server _server;
 
-	    private IMapNode Hero => this.server.MyHero;       
+	    private IMapNode Hero => this._server.MyHero;       
 
-        public DefaultMovement(Server board)
+        public ShortestPath(Server board)
         {
-            this.server = board;
+            this._server = board;
             PopulateMovementCost();
         }
 
@@ -26,7 +29,7 @@ namespace vindinium.Infrastructure.Behaviors.Movement
             var result = new List<IMapNode>();
             try
             {
-                var node = this.server.Board[closestChest.X][closestChest.Y];
+                var node = this._server.Board[closestChest.X][closestChest.Y];
                 int depth;
                 IMapNode target = node;
                 do
@@ -85,12 +88,12 @@ namespace vindinium.Infrastructure.Behaviors.Movement
 	    {
             if (cost < mapNode.MovementCost)
             {
-                if (mapNode.Type == Tile.IMPASSABLE_WOOD || mapNode.Type == server.MyTreasure())
+                if (mapNode.Type == Tile.IMPASSABLE_WOOD || mapNode.Type == _server.MyTreasure())
                 {
                     mapNode.Passable = false;
                     mapNode.MovementCost = -1;
                 }
-                else if (server.NotMyTreasure().Contains(mapNode.Type) ||
+                else if (_server.NotMyTreasure().Contains(mapNode.Type) ||
                     mapNode.Type == Tile.TAVERN ||
                     mapNode.Type == Tile.HERO_1 ||
                     mapNode.Type == Tile.HERO_2 ||

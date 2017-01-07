@@ -2,14 +2,14 @@
 
 namespace vindinium.common.Dtos
 {
-    public class Game
+    public class GameDTO
     {
-        public Game()
+        public GameDTO()
         {
-            Rounds = new List<Round>();
+            Rounds = new List<RoundDTO>();
         }
 
         public string Id { get; set; }
-        public List<Round> Rounds { get; set; }
+        public List<RoundDTO> Rounds { get; set; }
     }
 }

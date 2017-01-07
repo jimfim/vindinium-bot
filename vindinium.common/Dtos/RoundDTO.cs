@@ -1,14 +1,19 @@
 using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace vindinium.common.Dtos
 {
-    public class Round
+    public class RoundDTO
     {
         public string Id { get; set; }
         public int Turn { get; set; }
         public int MaxTurns { get; set; }
-        public List<Hero> Heroes { get; set; }
-        public Board Board { get; set; }
+
+        [JsonProperty("Heroes")]
+        public List<HeroDTO> Heroes { get; set; }
+
+        [JsonProperty("Board")]
+        public BoardDTO BoardDto { get; set; }
         public bool Finished { get; set; }
     }
 }

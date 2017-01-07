@@ -1,11 +1,5 @@
-﻿using System;
-using System.CodeDom;
-using System.Collections.Generic;
-using System.Linq;
-using vindinium.Infrastructure.Behaviors.Extensions;
+﻿using vindinium.Infrastructure.Behaviors.Extensions;
 using vindinium.Infrastructure.Behaviors.Map;
-using vindinium.Infrastructure.Behaviors.Models;
-using vindinium.Infrastructure.DTOs;
 
 namespace vindinium.Infrastructure.Behaviors.Tactics
 {
@@ -14,16 +8,16 @@ namespace vindinium.Infrastructure.Behaviors.Tactics
     /// </summary>
     public class DumbGoldRush : ITactic
     {
-        private readonly Server game;
+        private readonly Server _game;
 
         public DumbGoldRush(Server game)
         {
-            this.game = game;
+            this._game = game;
         }
 
         public IMapNode NextDestination()
         {
-            return this.game.GetClosestChest();
+            return this._game.GetClosestChest();
         }
     }
 }

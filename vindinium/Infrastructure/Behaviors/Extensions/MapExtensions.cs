@@ -84,10 +84,10 @@ namespace vindinium.Infrastructure.Behaviors.Extensions
         public static IMapNode GetClosestEnemy(this Server server)
         {
             IMapNode closest = null;
-            var viableTaverns = Find(server, server.NotMe());
-            if (viableTaverns.Any())
+            var closestEnemy = Find(server, server.NotMe());
+            if (closestEnemy.Any())
             {
-                closest = viableTaverns.OrderBy(c => c.MovementCost).First();
+                closest = closestEnemy.OrderBy(c => c.MovementCost).First();
             }
             return closest;
         }

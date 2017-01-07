@@ -281,50 +281,10 @@ namespace vindinium
             CreateBoard(gameResponse.game.board.size, gameResponse.game.board.tiles);
             PopulateNodeParents();
 
-            VisualizeMap(this);
+            //VisualizeMap(this);
         }
 
-        private void VisualizeMap(Server server)
-        {
-            Console.Clear();
-            for (var x = 0; x < server.Board.Length; x++)
-            {
-                for (var y = 0; y < server.Board.Length; y++)
-                {
-                    switch (server.Board[y][x].Type)
-                    {
-                        case Tile.FREE:
-                            Console.Write('_');
-                            break;
-                        case Tile.GOLD_MINE_1:
-                        case Tile.GOLD_MINE_2:
-                        case Tile.GOLD_MINE_3:
-                        case Tile.GOLD_MINE_4:
-                        case Tile.GOLD_MINE_NEUTRAL:
-                            Console.Write('$');
-                            break;
-                        case Tile.HERO_1:
-                        case Tile.HERO_2:
-                        case Tile.HERO_3:
-                        case Tile.HERO_4:
-                            Console.Write('@');
-                            break;
-                        case Tile.TAVERN:
-                            Console.Write('B');
-                            break;
-                        case Tile.IMPASSABLE_WOOD:
-                            Console.Write('#');
-                            break;
-                        default:
-                            Console.Write(' ');
-                            break;
-                    }
-                }
-
-
-                Console.WriteLine();
-            }
-        }
+       
 
         private void PopulateNodeParents()
         {
