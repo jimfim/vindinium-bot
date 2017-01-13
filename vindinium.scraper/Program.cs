@@ -27,6 +27,14 @@ namespace vindinium.scraper
             foreach (var gameid in gameids.Distinct())
             {
                 var game = ScrapeGameData(gameid);
+                //using (var session = sessionFactory.OpenSession())
+                //{
+                //    using (var transaction = session.BeginTransaction())
+                //    {
+                //        session.SaveOrUpdate(game);
+                //        transaction.Commit();
+                //    }
+                //}
                 foreach (var roundDto in game.Rounds)
                 {
                     var round = mapper.Map<Round>(roundDto);
@@ -34,6 +42,13 @@ namespace vindinium.scraper
                     {
                         using (var transaction = session.BeginTransaction())
                         {
+                            //session.SaveOrUpdate(round.Board);
+                            //foreach (var roundHero in round.Heroes)
+                            //{
+                            //    session.SaveOrUpdate(roundHero.Pos);
+                            //    session.SaveOrUpdate(roundHero.SpawnPos);
+                            //    session.SaveOrUpdate(roundHero);
+                            //}
                             session.SaveOrUpdate(round);
                             transaction.Commit();
                         }

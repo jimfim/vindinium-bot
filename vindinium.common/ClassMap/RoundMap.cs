@@ -8,8 +8,8 @@ namespace vindinium.common.ClassMap
         public RoundMap()
         {
             Id(x => x.Id);
-            Map(x => x.Heroes);
-            Map(x => x.Board);
+            //HasMany(x => x.Heroes);
+            References(x => x.Board).Cascade.SaveUpdate();
             Map(x => x.Finished);
             Map(x => x.MaxTurns);
             Map(x => x.Turn);

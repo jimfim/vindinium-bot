@@ -14,10 +14,11 @@ namespace vindinium.common.Data
         public static ISessionFactory InitializeDBconnection()
         {
             var sessionFactory = Fluently.Configure()
-                .Database(MsSqlConfiguration.MsSql2012
-                    .ConnectionString("Data Source=JIM-PC\\SQLEXPRESS;Integrated Security=SSPI;Initial Catalog=vindinium"))
+                .Database(SQLiteConfiguration.Standard
+                .UsingFile("vindinium.db"))
+                //.InMemory())
                 .Mappings(m =>
-                    m.FluentMappings.AddFromAssemblyOf<RoundMap>())
+                    m.FluentMappings.AddFromAssemblyOf<PosMap>())
                     .ExposeConfiguration(Config)
                 .BuildSessionFactory();
             return sessionFactory;
@@ -28,7 +29,7 @@ namespace vindinium.common.Data
 
             // this NHibernate tool takes a configuration (with mapping info in)
             // and exports a database schema from it
-            new SchemaExport(configuration).Create(false, true);
+            new SchemaExport(configuration).Create(true, true);
         }
     }
 }

@@ -17,10 +17,5 @@ namespace vindinium.common.Entities
         public virtual int MaxTurns { get; set; }
 
         public virtual int Turn { get; set; }
-
-        public Round()
-        {
-            Heroes = new List<Hero>();
-        }
     }
 }

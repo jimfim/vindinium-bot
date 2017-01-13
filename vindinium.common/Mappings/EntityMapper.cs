@@ -29,7 +29,7 @@ namespace vindinium.common.Mappings
                 .ForMember(x => x.MaxTurns, y => y.MapFrom(n => n.MaxTurns))
                 .ForMember(x => x.Turn, y => y.MapFrom(n => n.Turn))
                 .ForMember(x => x.Reference, y => y.MapFrom(n => n.Id))
-                .ForMember(x => x.Heroes, y => y.MapFrom(n => n.Heroes))
+                //.ForMember(x => x.Heroes, y => y.MapFrom(n => n.Heroes))
                 .ForMember(x => x.Id, y => y.Ignore());
 
             CreateMap<PosDTO, Pos>()

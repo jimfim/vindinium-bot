@@ -1,9 +1,4 @@
 ﻿using FluentNHibernate.Mapping;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using vindinium.common.Entities;
 
 namespace vindinium.common.ClassMap
@@ -18,8 +13,8 @@ namespace vindinium.common.ClassMap
             Map(x => x.Gold);
             Map(x => x.LastDir);
             Map(x => x.MineCount);
-            Map(x => x.Pos);
-            Map(x => x.SpawnPos);
+            References(x => x.Pos).Cascade.SaveUpdate();
+            References(x => x.SpawnPos).Cascade.SaveUpdate();
             Map(x => x.UserId);
             Map(x => x.Name);
         }
